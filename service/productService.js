@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const MIN_NAME_LENGTH = 5;
 const UNPROCESSABLE = 422;
 const MIN_QUANTITY = 0;
@@ -57,10 +58,24 @@ const validateQuantity = async (req, res, next) => {
   next();
 };
 
+const validateId = (req, res, next) => {
+  const { id } = req.params;
+  if (!ObjectId.isValid(id)) {
+    return res.status(UNPROCESSABLE).json({
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong id format'
+      }
+    });
+  }
+  next();
+};
+
 module.exports = {
   validateName,
   createNewProduct,
   validateQuantity,
   getAllProductsService,
   getProductById,
+  validateId,
 };
