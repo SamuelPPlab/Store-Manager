@@ -3,14 +3,16 @@ const { ObjectId } = require('mongodb');
 const {
   newSale,
   findAllSales,
-  saleUpdate,
-  findSale
-} = require('../service/SalesServices');
+  findSale,
+  updateSale,
+  deleteSale
+} = require('../service/salesServices');
 
 const router = Router();
 const SUCCESS = 200;
 const NOT_FOUND = 404;
 const UNPROCESSABLE_ENTITY = 422;
+const INTERNAL_SERVER_ERROR = 500;
 
 const err = {
   code: '',
@@ -23,6 +25,7 @@ router.post('/',
     const bodyInitial = req.body;
     if (bodyInitial.some((item) => 
       typeof item.quantity === 'string' || item.quantity < 1)) {
+      err.code = 'invalid_data';
       err.message = 'Wrong product ID or invalid quantity';
       err.status = UNPROCESSABLE_ENTITY;
       return next(err);
@@ -33,8 +36,7 @@ router.post('/',
 );
 
 router.get('/', async (_req, res, _next) => {
-  const allSales = await findAllSales();
-  const sales = allSales;
+  const sales = await findAllSales();
   return res.status(SUCCESS).json({sales});
 });
 
@@ -47,6 +49,12 @@ router.get('/:id', async (req, res, next) => {
     return next(err);
   }
   const searchedId = await findSale(id);
+  if (!searchedId) {
+    err.code = 'not_found';
+    err.message = 'Sale not found';
+    err.status = NOT_FOUND;
+    return next(err);
+  }
   return res.status(SUCCESS).json(searchedId);
 });
 
@@ -60,9 +68,25 @@ router.put('/:id', async (req, res, next) => {
     err.status = UNPROCESSABLE_ENTITY;
     return next(err);
   };
-  await saleUpdate(id, dataToUpdate);
-  const saleUpdated = await findSale(id);
-  return res.status(SUCCESS).json(saleUpdated);  
+  await updateSale(id, dataToUpdate);
+  const updateSaled = await findSale(id);
+  return res.status(SUCCESS).json(updateSaled);  
+});
+
+router.delete('/:id', async (req, res, next) => {
+  const { id } = req.params;
+  if (!ObjectId.isValid(id)) {
+    err.code = 'invalid_data';
+    err.message = 'Wrong sale ID format';
+    err.status = UNPROCESSABLE_ENTITY;
+    return next(err);
+  }
+  const storageSale = await findSale(id);
+  if (storageSale) {
+    await deleteSale(id);
+    return res.status(SUCCESS).json(storageSale);
+  }
+  return res.status(INTERNAL_SERVER_ERROR);
 });
 
 module.exports = router;

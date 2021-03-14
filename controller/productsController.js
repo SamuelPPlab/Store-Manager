@@ -4,12 +4,13 @@ const {
   postProducts,
   getAllProducts,
   findById,
-  deleteProduct,
-  updateProduct
-} = require('../models/storeModel');
+  updateProduct,
+  deleteProduct
+} = require('../models/productModel');
 const lastProductDatabase = require('../service/productServices');
 
-const { validateNameProduct,
+const { 
+  validateNameProduct,
   validateProductQuantity,
   verifyNameProductExist
 } = require('../service/productValidation');
@@ -17,9 +18,10 @@ const { validateNameProduct,
 const router = Router();
 const SUCCESS = 200;
 const CREATED = 201;
-const UNPROCESSABLE_ENTITY = 422;
 
-const err = { status: UNPROCESSABLE_ENTITY,
+const err = {
+  code: 'invalid_data',
+  status: 422,
   message: '',
 };
 
@@ -68,7 +70,6 @@ router.get('/:id', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
   const { id } = req.params;
   const { name, quantity } = req.body;
-  console.log('name:', name);
   if (!validateNameProduct(name)) {
     err.message = '"name" length must be at least 5 characters long';
     return next(err);
@@ -82,16 +83,14 @@ router.put('/:id', async (req, res, next) => {
     return next(err);
   }
   await updateProduct(id, name, quantity);
-  const productUpdated = await findById(id);
-  console.log('xxx', productUpdated);
-  return res.status(SUCCESS).json(productUpdated);  
+  const productUpdate = await findById(id);
+  return res.status(SUCCESS).json(productUpdate);  
 });
 
 router.delete('/:id', async (req, res, next) => {
   const { id } = req.params;
   const storageProduct = await findById(id);
   const removeProduct = await deleteProduct(id);
-  console.log('o que tem em remove product?', removeProduct);
   if (!removeProduct) {
     err.message = 'Wrong id format';
     return next(err);
