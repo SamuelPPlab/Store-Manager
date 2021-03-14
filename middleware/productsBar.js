@@ -53,6 +53,9 @@ const bar = async (req, res) => {
   }
 };
 
+
+
 module.exports = {
-  bar,
+  postBar,
+  getBar
 };
