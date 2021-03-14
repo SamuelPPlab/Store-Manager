@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --runInBand",
-    "start": "nodemon index.js",
+    "debug": "nodemon index.js",
+    "start": "node index.js",
     "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json . --ext .js, .jsx"
   },
   "repository": {
@@ -25,16 +26,16 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-rescue": "^1.1.26",
+    "faker": "^4.1.0",
     "frisby": "^2.1.2",
     "jest": "^26.4.1",
-    "mongodb": "^3.5.9",
-    "nodemon": "^2.0.4",
-    "faker": "^4.1.0"
+    "mongodb": "^3.6.3"
   },
   "devDependencies": {
     "eslint": "^7.3.1",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-sonarjs": "^0.5.0"
+    "eslint-plugin-sonarjs": "^0.5.0",
+    "nodemon": "^2.0.4"
   }
 }
