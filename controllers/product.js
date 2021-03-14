@@ -1,9 +1,9 @@
 const express = require('express');
 const routers = express.Router();
 
-const { bar } = require('../middleware/productsBar');
+const { postBar } = require('../middleware/productsBar');
 
-routers.post('/', bar );
+routers.post('/', postBar );
 // routers.get('/',);
 
 module.exports = routers;
