@@ -29,7 +29,6 @@ const findById = async (id) => {
 };
 
 const updateProduct = async (id, name, quantity) => {
-  console.log('linha 31',id, name, quantity);
   const updatedProduct = await connection()
     .then((db) => { db
       .collection('products')
@@ -38,13 +37,39 @@ const updateProduct = async (id, name, quantity) => {
         {$set: {name, quantity}}
       );
     });
-  console.log('linha 41',updatedProduct);
   return updatedProduct;
 };
+
+const deleteProduct = async (id) => {
+  return await connection()
+    .then((db) => { db
+      .collection('products')
+      .deleteOne({_id: ObjectId(id)});
+    })
+    .then(() => true)
+    .catch(() => false);
+};
+
+const getAllSales = async () => {
+  return await connection()
+    .then((db) => db.collection('sales').find().toArray());
+};
+
+const postSale = async (sale) => {
+  const saleCreate = await connection()
+    .then((db) => db.collection('sales')
+      .insertOne(({ itensSold: sale }))
+    );
+  return saleCreate.ops[0];
+};
+
 
 module.exports = {
   getAllProducts,
   postProducts,
   updateProduct,
+  deleteProduct,
+  getAllSales,
+  postSale,
   findById
 };
