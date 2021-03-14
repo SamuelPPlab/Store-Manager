@@ -26,7 +26,10 @@ let errorMessage = {
 };
 
 app.use((err, _req, res, _next) => {
-  const { status, message } = err;
+  const { status, message, code } = err;
+  if (code) {
+    errorMessage.err.code = code;
+  }
   errorMessage.err.message = message;
   console.log('message error:', message);
   return res.status(status).json(errorMessage);
