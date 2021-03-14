@@ -11,7 +11,7 @@ const SUCCESS_INSERTED = 201;
 const UNPROCESSABLE = 422;
 const codeType = 'invalid_data';
 
-const bar = async (req, res) => {
+const postBar = async (req, res) => {
   const { name, quantity } = req.body;
   const valideLentgh = await validateNameLength(name);
   const valideUnique = await validateNameUnique(name);
