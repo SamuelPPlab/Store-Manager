@@ -57,5 +57,5 @@ const postBar = async (req, res) => {
 
 module.exports = {
   postBar,
-  getBar
+  // getBar,
 };
