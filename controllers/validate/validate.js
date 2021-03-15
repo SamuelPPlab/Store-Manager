@@ -4,7 +4,7 @@ const NAME_LENGTH_MIN = 5;
 const ZERO = 0;
 const ONE = 1;
 
-const validateNameLength = async (name) => {
+const validateNameLength = (name) => {
   if (name.length >= NAME_LENGTH_MIN) {
     return true;
   }
@@ -18,13 +18,13 @@ const validateNameUnique = async (name) => {
   } 
   return false;
 };
-const validateQuantityType = async (quantity) => {
+const validateQuantityType = (quantity) => {
   if (typeof quantity === 'number') {
     return true;
   };
   return false;
 };
-const validateQuantitylargeThanZero = async (quantity) => {
+const validateQuantitylargeThanZero = (quantity) => {
   if (quantity >= ONE) {
     return true;
   }
