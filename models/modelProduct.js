@@ -19,7 +19,7 @@ const findProductById = async (id) => {
 
 const getAllProducts = async () => {
   return await connection()
-    .then((db) => db.collection('products').find({}).toArray());
+    .then((db) => db.collection('products').find().toArray());
 };
 module.exports = {
   insertProduct,

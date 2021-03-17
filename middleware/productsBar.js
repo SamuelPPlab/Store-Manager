@@ -3,6 +3,7 @@ const {
   validateNameUnique,
   validateQuantitylargeThanZero,
   validateQuantityType,
+  validateId,
 } = require('../controllers/validate/validate');
 
 const serviceProducts = require('../service/serviceProduct');
@@ -55,13 +56,20 @@ const postBar = async (req, res) => {
 
 const getBar = async (_req, res) => {
   const list = await serviceProducts.serviceGetAllProducts();
-  return res.status(SUCCESS).json(list);
+  return res.status(SUCCESS).json({ products: list });
 };
 
 const getBarId = async (req, res) => {
   const { id } = req.params;
+  if (validateId(id) === false) {    
+    return res.status(UNPROCESSABLE).json({
+      err: {
+        code: codeType,
+        message: 'Wrong id format',
+      }
+    });
+  }
   const prod = await serviceProducts.serviceGetProductById(id);
-  console.log(prod, id);
   return res.status(SUCCESS).json(prod);
 };
 
