@@ -1,4 +1,4 @@
-onst connection = require('./connection');
+const connection = require('./connection');
 const { ObjectId } = require('mongodb');
 
 const queryByName = async (collection, name) => {
