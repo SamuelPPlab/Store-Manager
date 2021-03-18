@@ -64,17 +64,26 @@ SalesRouter.put('/:id', async (req, res) => {
 });
 
 SalesRouter.delete('/:id', async (req, res) => {
-  const { id } = req.params;
-  const sale = SalesModel.getById(id);
-  if (!sale) {
+  try {
+    const { id } = req.params;
+    const sale = SalesModel.getById(id);
+    if (!sale) {
+      const errorInfo = {
+        message: 'Wrong sale ID format',
+        code: 'invalid_data'
+      };
+      return res.status(UNPROCESSABLE_ENTITY).json({ err: errorInfo });
+    }
+  } catch (err) {
     const errorInfo = {
       message: 'Wrong sale ID format',
-      code: 'invalid_data'
+      code: 'invalid_data' 
     };
     return res.status(UNPROCESSABLE_ENTITY).json({ err: errorInfo });
+  } finally {
+    SalesModel.delById(sale._id);
+    return res.status(OK).json(sale);
   }
-  SalesModel.delById(sale._id);
-  return res.status(OK).json(sale);
 });
 
 module.exports = SalesRouter;

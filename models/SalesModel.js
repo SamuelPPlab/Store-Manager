@@ -24,7 +24,7 @@ const getAll = async () => {
 const getById = async (id) => {
   const db = await connection();
   try {
-    const sale = await db.collection('sales').findOne(ObjectId(id));
+    const sale = await db.collection('sales').find(ObjectId(id));
     return sale;
   } catch (err) {
     return null;
@@ -34,7 +34,6 @@ const getById = async (id) => {
 const update = async ({ id, itensSold }) => {
   const db = await connection();
   console.log(itensSold, ObjectId(id));
-
   try {
     const sale = await db.collection('sales').updateOne({ _id: ObjectId(id) },
       { $set: itensSold },
