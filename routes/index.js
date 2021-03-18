@@ -1,5 +1,5 @@
 const express = require('express');
-const productsRoutes = require('./productsRoutes.js');
+const productsRoutes = require('./productsRoutes');
 const salesRoutes = require('./salesRoutes');
 const middlewares = require('../middlewares');
 

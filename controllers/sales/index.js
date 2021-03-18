@@ -1,7 +1,7 @@
-const createSale = require('./createSale');
+const createSale = require('./createSales');
 const getSales = require('./getSales');
-const updateSale = require('./updateSale');
-const deleteSale = require('./deleteSale');
+const updateSale = require('./updateSales');
+const deleteSale = require('./deleteSales');
 
 module.exports = {
   createSale,
