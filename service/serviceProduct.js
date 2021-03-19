@@ -16,9 +16,20 @@ const serviceGetProductById = async (id) => {
   return await products.findProductById(id);
 };
 
+const servicePutProductById = async (id, updProd) => {
+  return await products.updateProduct(id, updProd);
+};
+
+const serviceDeleteProductById = async (id, delProd) => {
+  return await products.deleteProduct(id, delProd);
+};
+
+
 module.exports = {
   serviceInsertProduct,
   serviceFindProduct,
   serviceGetAllProducts,
   serviceGetProductById,
+  servicePutProductById,
+  serviceDeleteProductById,
 };

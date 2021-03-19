@@ -73,8 +73,67 @@ const getBarId = async (req, res) => {
   return res.status(SUCCESS).json(prod);
 };
 
+const putBarId = async (req, res) => {
+  const { id } = req.params;
+  const prod = req.body;
+
+  const valideLentgh = await validateNameLength(prod.name);
+  const valideQuantity = await validateQuantitylargeThanZero(prod.quantity);
+  const valideQuantityType = await validateQuantityType(prod.quantity);
+  
+  switch (false) {
+  case (valideLentgh):
+    return res.status(UNPROCESSABLE).json({
+      err: {
+        code: codeType,
+        message: '"name" length must be at least 5 characters long',
+      }
+    });
+  case (valideQuantityType):
+    return res.status(UNPROCESSABLE).json({
+      err: {
+        code: codeType,
+        message: '"quantity" must be a number',
+      }
+    });
+  case (valideQuantity):
+    return res.status(UNPROCESSABLE).json({
+      err: {
+        code: codeType,
+        message: '"quantity" must be larger than or equal to 1',
+      }
+    });
+  default:
+    const result = await serviceProducts.servicePutProductById(id, prod);
+    return res.status(SUCCESS).json(result);
+  }
+
+};
+
+const deleteBarId = async (req, res) => {
+  const { id } = req.params;
+  const delProd = req.body;
+  console.log(delProd);
+  const valId = validateId(id);
+  const valUnique = validateNameUnique(delProd.name);
+  if (valUnique === false || valId === false) {
+    return res.status(UNPROCESSABLE).json({
+      err: {
+        code: codeType,
+        message: 'Wrong id format',
+      }
+    });
+  } else {
+    const deleted = await serviceProducts.serviceDeleteProductById(id, delProd);
+    return res.status(SUCCESS).json(deleted);
+  }
+  
+};
+
 module.exports = {
   postBar,
   getBar,
   getBarId,
+  putBarId,
+  deleteBarId,
 };
