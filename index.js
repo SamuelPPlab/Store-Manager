@@ -1,18 +1,22 @@
 const express = require('express');
-const bodyParse = require('body-parser');
-const routes = require('./routes');
-
-const port = 3000;
+const productRouter = require('./routes/productsRoutes');
+const saleRouter = require('./routes/salesRoutes');
+const bodyParser = require('body-parser');
+const { sendError } = require('./utils/handleError');
 
 const app = express();
+const PORT = 3000;
 
+app.use(bodyParser.json());
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.send();
 });
 
-app.use(bodyParse.json());
+app.use('/products', productRouter);
+app.use('/sales', saleRouter);
+app.use((err, _req, res, _next) => {
+  sendError(err, res);
+});
 
-app.use(routes);
-
-app.listen(port, () => console.log(`A porta usada vai ser a ${port}`));
+app.listen(PORT);

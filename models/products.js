@@ -1,20 +1,70 @@
-const connection = require('./connection');
+const connection = require('../connection/connection');
 const { ObjectId } = require('mongodb');
+const collection = 'products';
+const { throwError } = require('../utils/handleError');
+const { status, errors } = require('../utils/setStatus');
 
-const queryByName = async (collection, name) => {
-  const db = await connection(collection);
-  return await db.findOne({ name });
+const createProduct = async (name, quantity) => {
+  const createdProduct = await connection().then((db) =>
+    db.collection(collection).insertOne({ name, quantity }),
+  );
+
+  return createdProduct;
 };
 
-const updateProduct = async (collection, id, data) => {
-  const db = await connection(collection);
-  await db.updateOne(
-    { _id: ObjectId(id) },
-    { $set: data },
+const getByName = async (name) => {
+  const product = await connection().then((db) =>
+    db.collection(collection).findOne({ name }),
   );
+
+  return product;
+};
+
+const getAllProducts = async () => {
+  const allProducts = await connection().then((db) =>
+    db.collection(collection).find().toArray(),
+  );
+
+  return allProducts;
+};
+
+const getProductById = async (id) => {
+  const product = await connection()
+    .then((db) => db.collection(collection).findOne({ _id: ObjectId(id) }))
+    .catch((err) => {
+      throw new throwError(status.unprocessableEntity, errors.wrongId);
+    });
+
+  return product;
+};
+
+const updateProduct = async (id, name, quantity) => {
+  const updatedProduct = await connection().then((db) => {
+    db.collection(collection).updateOne(
+      { _id: ObjectId(id) },
+      { $set: { name, quantity } },
+    );
+  });
+
+  return updatedProduct;
+};
+
+const deleteProduct = async (id) => {
+  const deletedProduct = await connection()
+    .then((db) => {
+      db.collection(collection).deleteOne({ _id: ObjectId(id) });
+    })
+    .catch((err) => {
+      throw new throwError(status.unprocessableEntity, errors.wrongId);
+    });
+  return deletedProduct;
 };
 
 module.exports = {
-  queryByName,
+  createProduct,
+  getByName,
+  getAllProducts,
+  getProductById,
   updateProduct,
+  deleteProduct,
 };

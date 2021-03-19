@@ -1,38 +1,63 @@
-const { error } = require('../utils/dictionary');
-const { products, utils } = require('../models');
-const { validateProduct } = require('../utils/validators');
+const productModel = require('../models/products');
+const { throwError } = require('../utils/handleError');
+const { status, errors } = require('../utils/setStatus');
 
-const createProduct = async (product) => {
-  const isNameTaken = await findByName(product.name);
-  await validateProduct(product, isNameTaken);
-  return utils.insertToDb('products', product);
+const createProduct = async ({ name, quantity }) => {
+  const product = await productModel.getByName(name);
+
+  if (product) {
+    throw new throwError(status.unprocessableEntity, errors.productExists);
+  }
+
+  const createdProduct = await productModel.createProduct(name, quantity);
+
+  const result = {
+    _id: createdProduct.insertedId,
+    name,
+    quantity,
+  };
+
+  return result;
 };
 
-const findByName = async (name) => products.queryByName('products', name);
+const getAllProducts = async () => {
+  const products = await productModel.getAllProducts();
 
-const getProducts = async (id) => {
-  const productsList = await utils.queryFromDb('products', id);
-  if (!productsList) throw new Error(error.invalidId);
-  return productsList;
+  const allProducts = {
+    products,
+  };
+
+  return allProducts;
 };
 
-const productUpdate = async (id, body) => {
-  const product = await getProducts(id);
-  const updatedProduct = { ...product, ...body };
-  await validateProduct(updatedProduct);
-  await products.productUpdate('products', id, updatedProduct);
+const getProductById = async (id) => {
+  const product = await productModel.getProductById(id);
+
+  return product;
+};
+
+const updateProduct = async (id, name, quantity) => {
+  await productModel.updateProduct(id, name, quantity);
+
+  const updatedProduct = {
+    _id: id,
+    name,
+    quantity,
+  };
+
   return updatedProduct;
 };
 
-const productDelete = async (id) => {
-  await getProducts(id);
-  return utils.deleteFromDb('products', id);
+const deleteProduct = async (id) => {
+  const deletedProduct = await productModel.deleteProduct(id);
+
+  return deletedProduct;
 };
 
 module.exports = {
   createProduct,
-  productDelete,
-  findByName,
-  getProducts,
-  productUpdate,
+  getAllProducts,
+  getProductById,
+  updateProduct,
+  deleteProduct,
 };

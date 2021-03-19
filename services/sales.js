@@ -1,35 +1,62 @@
-const { utils, sales } = require('../models');
-const { error } = require('../utils/dictionary');
-const { validateSales } = require('../utils/validators');
+const saleModel = require('../models/sales');
+const productModel = require('../models/products');
+const { throwError } = require('../utils/handleError');
+const { status, errors } = require('../utils/setStatus');
 
-const createSale = async (itensSold) => {
-  await validateSales(itensSold);
-  return utils.insertToDb('sales', { itensSold });
+const createSale = async (sale) => {
+  const insertedId = await saleModel.createSale(sale);
+
+  const createdSale = {
+    _id: insertedId,
+    itensSold: sale,
+  };
+
+  return createdSale;
 };
 
-const getSales = async (id) => {
-  const salesList = await utils.queryFromDb('sales', id);
-  if (!salesList) throw new Error(error.invalidSale);
-  return salesList;
+const getAllSales = async () => {
+  const sales = await saleModel.getAllSales();
+
+  const resultSales = { sales };
+
+  return resultSales;
 };
 
-const saleUpdate = async (id, body) => {
-  await getSales(id);
-  await validateSales(body);
-  const promises = body.map( async (prod) => await sales.updateSales('sales', id, prod));
-  const results = await Promise.all(promises);
-  return results[results.length - 1];
+const getSaleById = async (id) => {
+  const sale = await saleModel.getSaleById(id);
+
+  return sale;
 };
 
-const saleDelete = async (id) => {
-  const salesList = await utils.queryFromDb('sales', id);
-  if (!salesList) throw new Error(error.invalidSaleId);
-  return utils.deleteFromDb('sales', id);
+const updateSale = async (id, sale) => {
+  const updatedSale = await saleModel.updateSale(id, sale);
+
+  if (updatedSale === 1) {
+    const updateSales = {
+      _id: id,
+      itensSold: sale,
+    };
+
+    return updateSales;
+  }
+};
+
+const deleteSale = async (id) => {
+  const deletedSale = await saleModel.getSaleByIdToDelete(id);
+
+  if (!deletedSale) {
+    throw new throwError(status.notFound, errors.wrongSaleID);
+  }
+
+  await saleModel.deleteSale(id);
+
+  return deletedSale;
 };
 
 module.exports = {
   createSale,
-  getSales,
-  saleUpdate,
-  saleDelete,
+  getAllSales,
+  getSaleById,
+  updateSale,
+  deleteSale,
 };
