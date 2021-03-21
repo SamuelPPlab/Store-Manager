@@ -4,14 +4,15 @@ const { SUCCESS, NOT_FOUND } = require('../dictionary/statusCode');
 const { saleNotFound, WrongIdSaleFormat } = require('../dictionary/errorMessages');
 
 const updateQuantity = async (itens, method) => {
-  itens.forEach(async ({ productId, quantity: saleQuantity }) => {
-    let { _id, name, quantity } = await productsService.productById(productId);
-    
+  for await (const item of itens) {
+    const { productId, name, quantity: saleQuantity } = item;
+    let { _id, quantity } = await productsService.productById(productId);
+      
     if (method === 'POST') quantity = quantity - saleQuantity;
     if (method === 'DELETE') quantity = quantity + saleQuantity;
 
     await productsService.updateProductInfo(_id, name, quantity);
-  });
+  }
 };
 
 const createNewSale = async (req, res, next) => {
