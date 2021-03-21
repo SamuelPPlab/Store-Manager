@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const products = require('./controllers/product');
+const sales = require('./controllers/sales');
 
 const app = express();
 const SUCCESS = 200;
@@ -15,5 +16,6 @@ app.get('/', (_request, response) => {
 app.use(bodyParser.json());
 
 app.use('/products', products);
+app.use('/sales', sales);
 
 app.listen(PORT, console.log(`funcionando na porta "${PORT}"`));
