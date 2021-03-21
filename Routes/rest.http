@@ -1,0 +1,28 @@
+GET http://localhost:3000/products
+
+### Cria um novo produto
+POST  http://localhost:3000/products
+Content-Type: application/json
+
+{
+    "name": "macbook pro",
+    "quantity": 1
+
+}
+
+### GET um novo produto pelo id
+GET http://localhost:3000/products/60543a6b6ed32c343816d8af
+
+### UPDATE um novo produto pelo id
+PATCH http://localhost:3000/products/60543a6b6ed32c343816d8af
+Content-Type: application/json
+
+{
+   "quantity": 10
+}
+
+### DELETE um novo produto pelo id
+DELETE http://localhost:3000/products/60543a6b6ed32c343816d8af
+
+###
+GET http://localhost:3000/aaaa

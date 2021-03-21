@@ -25,11 +25,13 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-rescue": "^1.1.26",
+    "faker": "^4.1.0",
     "frisby": "^2.1.2",
+    "http-errors": "^1.7.2",
     "jest": "^26.4.1",
     "mongodb": "^3.5.9",
-    "nodemon": "^2.0.4",
-    "faker": "^4.1.0"
+    "mongoose": "^5.12.1",
+    "nodemon": "^2.0.4"
   },
   "devDependencies": {
     "eslint": "^7.3.1",
