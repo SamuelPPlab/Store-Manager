@@ -17,7 +17,18 @@ const findById = async (id) => {
 
 const create = async (itensSold) => {
   await saleDataValidation(itensSold);
-  itensSold.some(item => productStockValidation(item));
+  
+  for(let item of itensSold) {
+    const dontHaveProductsInStock = await productStockValidation(item);
+
+    if(dontHaveProductsInStock) throw({
+      err: {
+        'code': 'stock_problem',
+        'message': 'Such amount is not permitted to sell'
+      }
+    });
+  }
+
   const sale = await Sales.create(itensSold);
   itensSold
     .forEach((item) => {
