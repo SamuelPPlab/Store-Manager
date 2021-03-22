@@ -1,4 +1,3 @@
-const Products = require('../models/Products');
 const ZERO = 0;
 
 module.exports = async (sale) => {

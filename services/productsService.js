@@ -1,7 +1,6 @@
 const Products = require('../models/Products');
 const productDataValidation = require('./productDataValidation');
 const productIDValidation = require('./productIDValidation');
-const productStockValidation = require('./productStockValidation');
 
 const getAll = async () => {
   return await Products.getAll();
@@ -34,7 +33,6 @@ const increaseQuantity = async (id, quantity) => {
 };
 
 const decreaseQuantity = async (id, quantity) => {
-  await productStockValidation(id, quantity);
   return await Products.decreaseQuantity(id, quantity);
 };
 

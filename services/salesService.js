@@ -3,6 +3,7 @@ const productsService = require('../services/productsService');
 const saleDataValidation = require('./saleDataValidation');
 const saleIDValidation = require('./saleIDValidation');
 const saleExists = require('./saleExists');
+const productStockValidation = require('./productStockValidation');
 
 const getAll = async () => {
   return await Sales.getAll();
@@ -16,8 +17,8 @@ const findById = async (id) => {
 
 const create = async (itensSold) => {
   await saleDataValidation(itensSold);
+  itensSold.some(item => productStockValidation(item));
   const sale = await Sales.create(itensSold);
-  //itensSold.some((item) => productStockValidation(item.productId, item.quantity));
   itensSold
     .forEach((item) => {
       productsService.decreaseQuantity(item.productId, item.quantity);

@@ -9,6 +9,11 @@ module.exports = (error, _request, response, _next) => {
     return response.status(NOT_FOUND).json({ err });
   }
 
+  if(err.code === 'stock_problem') {
+    console.log('stock problem');
+    return response.status(NOT_FOUND).json({ err });
+  }
+
   if (err) {
     return response.status(UNPROCESSABLE_ENTITY).json({ err });
   }
