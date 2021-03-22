@@ -23,10 +23,18 @@ const putByIdSale = async (id, sales) => {
     .then(() =>  ({ _id:id, itensSold: sales }));
 };
 
+const deleteByIdSale = async (id) => {
+  return await connection()
+    .then((db) => db
+      .collection('sales')
+      .deleteOne({ _id: ObjectId(id) }));
+};
+
 module.exports = {
   insertSales,
   getAllSales,
   findByIdSale,
   putByIdSale,
+  deleteByIdSale,
 };
 

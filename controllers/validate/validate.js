@@ -1,10 +1,11 @@
 const { ObjectId } = require('mongodb');
 const serviceProducts = require('../../service/serviceProduct');
+const serviceSale = require('../../service/serviceSales');
 
 const NAME_LENGTH_MIN = 5;
 const ZERO = 0;
 const ONE = 1;
-// const IDLENGTH = 24;
+const IDLENGTH = 24;
 
 const validateNameLength = (name) => {
   if (name.length >= NAME_LENGTH_MIN) {
@@ -33,7 +34,23 @@ const validateQuantitylargeThanZero = (quantity) => {
   return false;
 };
 const validateId = (id) => {
-  return ObjectId.isValid(id);
+  if (id.length !== IDLENGTH)
+    return false;
+};
+
+const validateDelete = async (id) => {
+  const prod = await serviceSale.serviceGetSaleById(id);
+  if (prod === null || prod === {}) {
+    return { 
+      valid: false,
+      json: {
+        err: {
+          code: 'invalid_data',
+          message: 'Wrong sale ID format',
+        }
+      }, status: 422 };
+  }
+  return { valid: true, json: prod, status: 200 };
 };
 
 module.exports = {
@@ -42,4 +59,5 @@ module.exports = {
   validateQuantitylargeThanZero,
   validateQuantityType,
   validateId,
+  validateDelete,
 };

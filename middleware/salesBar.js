@@ -3,6 +3,7 @@ const {
   serviceGetAllSales,
   serviceGetSaleById,
   servicePutSaleById,
+  serviceDeleteSaleById,
 } = require('../service/serviceSales');
 
 const SUCCESS = 200;
@@ -15,7 +16,7 @@ const {
   validateId,
   validateQuantityType,
   validateQuantitylargeThanZero,
-
+  validateDelete,
 } = require('../controllers/validate/validate');
 
 const postBar = async (req, res) => {
@@ -56,7 +57,6 @@ const getBarId = async (req, res) => {
     });
   }
   const sale = await serviceGetSaleById(id);
-  console.log(sale);
   return res.status(SUCCESS).json(sale);
 
 };
@@ -73,7 +73,6 @@ const putBarId = async (req, res) => {
     saleId = element.productId;
     quantity = element.quantity;
   });
-  console.log(saleId, quantity);
   if (
     valId === false
     || valQuantLarge(quantity) === false
@@ -91,9 +90,35 @@ const putBarId = async (req, res) => {
   };
 };
 
+const deleteBarId = async (req, res) => {
+  const { id } = req.params;
+  const valId = validateId(id);
+  
+  if (valId === false) {
+    return res.status(UNPROCESSABLE).json({
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong sale ID format',
+      }
+    });
+  } 
+  const prod = await serviceGetSaleById(id);
+  if (prod === null || prod === {}) {
+    return res.status(UNPROCESSABLE).json({
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong sale ID format',
+      }
+    });
+  }
+  await serviceDeleteSaleById(id);
+  return res.status(SUCCESS).json(prod);
+};
+
 module.exports = {
   putBarId,
   getBarId,
   postBar,
   getBar,
+  deleteBarId,
 };
