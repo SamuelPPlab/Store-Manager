@@ -2,6 +2,8 @@ const productsModel = require('./productsModel');
 
 const productSchema = require('../schema/productSchema');
 
+const TAMANHO_ID = 24;
+
 const createProduct = async (name, quantity) => {
   console.log('service - products');
 
@@ -17,9 +19,29 @@ const createProduct = async (name, quantity) => {
 
   const createdProduct = await productsModel.createProduct(name, quantity);
   console.log('createdProduct - service:', createdProduct);
-  return { code: 201, createdProduct };
+  return { CREATED: 201, createdProduct };
+};
+
+const getAll = async () => {
+  const productsResponse = await productsModel.getAll();
+
+  return productsResponse;
+};
+
+const findById = async (id) => {
+  if(id.length !== TAMANHO_ID)
+    return { err: { code: 'invalid_data', message: 'Wrong id format' } };
+
+  const productById = await productsModel.findById(id);
+
+  if(!productById)
+    return { err: { code: 'invalid_data', message: 'Wrong id format' } };
+
+  return { productById };
 };
 
 module.exports = {
   createProduct,
+  getAll,
+  findById,
 };

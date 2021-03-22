@@ -15,7 +15,21 @@ const findByName = async (name) => {
   return existsProduct ? true : false;
 };
 
+const getAll = async () => {
+  const allProducts = await connection()
+    .then((db) => db.collection('products').find().toArray());
+  return allProducts;
+};
+
+const findById = async (id) => {
+  const productById = await connection()
+    .then((db) => db.collection('products').findOne(ObjectId(id)));
+  return productById;
+};
+
 module.exports = {
   createProduct,
   findByName,
+  getAll,
+  findById,
 };
