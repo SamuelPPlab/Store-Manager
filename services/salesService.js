@@ -1,4 +1,5 @@
 const Sales = require('../models/Sales');
+const productsService = require('../services/productsService');
 const saleDataValidation = require('./saleDataValidation');
 const saleIDValidation = require('./saleIDValidation');
 const saleExists = require('./saleExists');
@@ -16,6 +17,11 @@ const findById = async (id) => {
 const create = async (itensSold) => {
   await saleDataValidation(itensSold);
   const sale = await Sales.create(itensSold);
+  //itensSold.some((item) => productStockValidation(item.productId, item.quantity));
+  itensSold
+    .forEach((item) => {
+      productsService.decreaseQuantity(item.productId, item.quantity);
+    });
   return sale;
 };
 
@@ -29,6 +35,9 @@ const update = async (id, sale) => {
 const remove = async (id) => {
   await saleIDValidation(id);
   await saleExists(id);
+  const { itensSold } = await Sales.findById(id);
+  itensSold
+    .forEach((item) => productsService.increaseQuantity(item.productId, item.quantity));
   return await Sales.remove(id);
 };
 

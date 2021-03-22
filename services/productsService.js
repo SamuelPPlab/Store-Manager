@@ -1,6 +1,7 @@
 const Products = require('../models/Products');
 const productDataValidation = require('./productDataValidation');
 const productIDValidation = require('./productIDValidation');
+const productStockValidation = require('./productStockValidation');
 
 const getAll = async () => {
   return await Products.getAll();
@@ -28,10 +29,21 @@ const remove = async (id) => {
   return await Products.remove(id);
 };
 
+const increaseQuantity = async (id, quantity) => {
+  return await Products.increaseQuantity(id, quantity);
+};
+
+const decreaseQuantity = async (id, quantity) => {
+  await productStockValidation(id, quantity);
+  return await Products.decreaseQuantity(id, quantity);
+};
+
 module.exports = {
   getAll,
   findById,
   create,
   update,
-  remove
+  remove,
+  increaseQuantity,
+  decreaseQuantity,
 };

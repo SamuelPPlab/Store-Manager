@@ -41,7 +41,6 @@ const create = async (name, quantity) => {
 };
 
 const update = async (id, name, quantity) => {
-  if (!ObjectId.isValid(id)) return null;
   const productUpdated = await connection()
     .then(db => db.collection('products')
       .findOneAndUpdate(
@@ -54,12 +53,35 @@ const update = async (id, name, quantity) => {
 };
 
 const remove = async (id) => {
-  if (!ObjectId.isValid(id)) return null;
   const productDeleted = await connection()
     .then(db => db.collection('products')
       .findOneAndDelete({ _id: ObjectId(id) }));
 
   return productDeleted['value'];
+};
+
+const increaseQuantity = async (id, quantity) => {
+  const productUpdated = await connection()
+    .then(db => db.collection('products')
+      .findOneAndUpdate(
+        { _id: ObjectId(id) },
+        { $inc: { quantity: quantity } },
+        { returnOriginal: false }
+      ));
+      
+  return productUpdated['value'];
+};
+
+const decreaseQuantity = async (id, quantity) => {
+  const productUpdated = await connection()
+    .then(db => db.collection('products')
+      .findOneAndUpdate(
+        { _id: ObjectId(id) },
+        { $inc: { quantity: - quantity } },
+        { returnOriginal: false }
+      ));
+      
+  return productUpdated['value'];
 };
 
 module.exports = {
@@ -68,5 +90,7 @@ module.exports = {
   findByName,
   create,
   update,
-  remove
+  remove,
+  increaseQuantity,
+  decreaseQuantity,
 };

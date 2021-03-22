@@ -52,7 +52,6 @@ const remove = async(request, response, next) => {
   }
 };
 
-
 module.exports = {
   getAll,
   findById,
