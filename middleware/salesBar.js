@@ -57,6 +57,14 @@ const getBarId = async (req, res) => {
     });
   }
   const sale = await serviceGetSaleById(id);
+  if (sale === null) {
+    return res.status(NOT_FOUND).json({
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      }
+    });
+  }
   return res.status(SUCCESS).json(sale);
 
 };

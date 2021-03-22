@@ -5,7 +5,7 @@ const serviceSale = require('../../service/serviceSales');
 const NAME_LENGTH_MIN = 5;
 const ZERO = 0;
 const ONE = 1;
-const IDLENGTH = 24;
+// const IDLENGTH = 24;
 
 const validateNameLength = (name) => {
   if (name.length >= NAME_LENGTH_MIN) {
@@ -34,8 +34,8 @@ const validateQuantitylargeThanZero = (quantity) => {
   return false;
 };
 const validateId = (id) => {
-  if (id.length !== IDLENGTH)
-    return false;
+  // if (id.length < IDLENGTH)
+  return ObjectId.isValid(id);
 };
 
 const validateDelete = async (id) => {
