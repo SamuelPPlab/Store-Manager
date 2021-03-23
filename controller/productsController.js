@@ -13,6 +13,13 @@ router.get('/', async (req, res) => {
   res.status(OK).json({foundAll});
 });
 
+router.get('/', async (req, res) => {
+  const { id } = req.body;
+  const foundId = await productsServices.findProductsById(id);
+
+  res.status
+});
+
 router.post('/', validateName, validateQuantity, async (req, res) => {
   const { name, quantity } = req.body;
   const { insertedId } = await productsServices.createProduct(name, quantity);
