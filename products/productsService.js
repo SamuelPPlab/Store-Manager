@@ -29,13 +29,14 @@ const getAll = async () => {
 };
 
 const findById = async (id) => {
+  const message = 'Wrong id format';
   if(id.length !== TAMANHO_ID)
-    return { err: { code: 'invalid_data', message: 'Wrong id format' } };
+    return { err: { code: 'invalid_data', message } };
 
   const productById = await productsModel.findById(id);
 
   if(!productById)
-    return { err: { code: 'invalid_data', message: 'Wrong id format' } };
+    return { err: { code: 'invalid_data', message } };
 
   return { productById };
 };
@@ -52,9 +53,24 @@ const updateProduct = async (id, name, quantity) => {
   return { UPDATED: 200, updatedProduct };
 };
 
+const deleteProduct = async (id) => {
+  if(id.length !== TAMANHO_ID)
+    return { err: { code: 'invalid_data', message: 'Wrong id format' } };
+
+  const productById = await productsModel.findById(id);
+
+  const deletedProduct = await productsModel.deleteProduct(id);
+
+  if(!deletedProduct)
+    return { err: { code: 'invalid_data', message: 'Wrong id format' } };
+
+  return { OK: 200, productById };
+};
+
 module.exports = {
   createProduct,
   getAll,
   findById,
   updateProduct,
+  deleteProduct,
 };

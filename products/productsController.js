@@ -2,7 +2,7 @@ const productsService = require('./productsService');
 
 const OK = 200;
 const ERROR = 422;
-const NOT_FOUND = 404;
+// const NOT_FOUND = 404;
 const ZERO = 0;
 
 const createProduct = async (req, res) => {
@@ -26,8 +26,10 @@ const getAll = async (req, res) => {
   const productsResponse = await productsService.getAll();
   console.log('getAll - controller', productsResponse);
 
-  if(productsResponse.length === ZERO)
-    return res.status(NOT_FOUND).json({ message: 'Not found' });
+  // retirando a validação que havia colocado com o status 404 porque altera
+  // o comportamento esperado por ele
+  // if(productsResponse.length === ZERO)
+  //   return res.status(NOT_FOUND).json({ message: 'Not found' });
 
   res.status(OK).json({products: productsResponse});
 };
@@ -55,9 +57,20 @@ const updateProduct = async (req, res) => {
   res.status(UPDATED).json(updatedProduct);
 };
 
+const deleteProduct = async (req, res) => {
+  const { id } = req.params;
+
+  const { OK, productById, err } = await productsService.deleteProduct(id);
+
+  if(err) return res.status(ERROR).json({err});
+
+  res.status(OK).json(productById);
+};
+
 module.exports = {
   createProduct,
   getAll,
   findById,
   updateProduct,
+  deleteProduct,
 };
