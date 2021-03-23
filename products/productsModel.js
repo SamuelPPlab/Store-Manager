@@ -27,9 +27,18 @@ const findById = async (id) => {
   return productById;
 };
 
+const updateProduct = async (id, name, quantity) => {
+  const updatedProduct = await connection()
+    .then((db) => db.collection('products').updateOne(
+      {_id: ObjectId(id)}, {$set: {name, quantity}}
+    ));
+  return { id, name, quantity };
+};
+
 module.exports = {
   createProduct,
   findByName,
   getAll,
   findById,
+  updateProduct,
 };

@@ -40,8 +40,21 @@ const findById = async (id) => {
   return { productById };
 };
 
+const updateProduct = async (id, name, quantity) => {
+  if(id.length !== TAMANHO_ID)
+    return { err: { code: 'invalid_data', message: 'Wrong id format' } };
+
+  const validate = productSchema.validate(name, quantity);
+  if(validate.err) return validate;
+
+  const updatedProduct = await productsModel.updateProduct(id, name, quantity);
+
+  return { UPDATED: 200, updatedProduct };
+};
+
 module.exports = {
   createProduct,
   getAll,
   findById,
+  updateProduct,
 };
