@@ -29,7 +29,7 @@ router.post('/', salesValidation, async (req, res) => {
     products.forEach(async (product) => {
       const { productId } = product;
 
-      const productExists = await Products.findById(productId);
+      const productExists = await Products.findProductById(productId);
 
       if (!productExists) {
         return res.status(ERROR).json(ERROR_MESSAGE);
