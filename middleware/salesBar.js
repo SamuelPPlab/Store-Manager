@@ -5,6 +5,9 @@ const {
   servicePutSaleById,
   serviceDeleteSaleById,
 } = require('../service/serviceSales');
+const {
+  serviceDecIncProductById,
+} = require('../service/serviceProduct');
 
 const SUCCESS = 200;
 const SUCCESS_INSERTED = 201;
@@ -16,7 +19,6 @@ const {
   validateId,
   validateQuantityType,
   validateQuantitylargeThanZero,
-  validateDelete,
 } = require('../controllers/validate/validate');
 
 const postBar = async (req, res) => {
@@ -37,6 +39,7 @@ const postBar = async (req, res) => {
     });
   } else {
     const { ops } = await serviceInsertSales(req.body);
+    await serviceDecIncProductById(productId, - quantity);
     return res.status(SUCCESS).json(ops[0]);
   } 
 };
@@ -77,9 +80,10 @@ const putBarId = async (req, res) => {
   const valQuantType = validateQuantityType;
   let saleId;
   let quantity;
-  itensSolds.forEach(element => {
+  itensSolds.forEach(async (element) => {
     saleId = element.productId;
     quantity = element.quantity;
+    await serviceDecIncProductById(saleId, quantity);
   });
   if (
     valId === false
@@ -94,6 +98,7 @@ const putBarId = async (req, res) => {
     });
   } else {
     const sales = await servicePutSaleById(id, itensSolds);
+    console.log(quantity);
     return res.status(SUCCESS).json(sales);
   };
 };
@@ -110,8 +115,8 @@ const deleteBarId = async (req, res) => {
       }
     });
   } 
-  const prod = await serviceGetSaleById(id);
-  if (prod === null || prod === {}) {
+  const sale = await serviceGetSaleById(id);
+  if (sale === null || sale === {}) {
     return res.status(UNPROCESSABLE).json({
       err: {
         code: 'invalid_data',
@@ -119,8 +124,11 @@ const deleteBarId = async (req, res) => {
       }
     });
   }
+  sale.itensSold.forEach(async (prod) => {
+    await serviceDecIncProductById(prod.productId, prod.quantity);
+  });
   await serviceDeleteSaleById(id);
-  return res.status(SUCCESS).json(prod);
+  return res.status(SUCCESS).json(sale);
 };
 
 module.exports = {

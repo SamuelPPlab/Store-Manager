@@ -24,6 +24,9 @@ const serviceDeleteProductById = async (id, delProd) => {
   return await products.deleteProduct(id, delProd);
 };
 
+const serviceDecIncProductById = async (id, quantity) => {
+  return await products.decIncProduct(id, quantity);
+};
 
 module.exports = {
   serviceInsertProduct,
@@ -32,4 +35,5 @@ module.exports = {
   serviceGetProductById,
   servicePutProductById,
   serviceDeleteProductById,
+  serviceDecIncProductById,
 };

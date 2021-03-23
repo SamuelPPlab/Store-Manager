@@ -3,7 +3,7 @@ const connection = require('./connection');
 
 const insertSales = async (sales) => {
   return await connection()
-    .then((db) => db.collection('sales').insert({ itensSold: sales }));
+    .then((db) => db.collection('sales').insertOne({ itensSold: sales }));
 };
 
 const getAllSales = async () => {

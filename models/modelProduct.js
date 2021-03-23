@@ -30,6 +30,13 @@ const updateProduct = async (id, { name, quantity}) => {
     .then(() => ({ _id: id, name, quantity }));
 };
 
+const decIncProduct = async (id, quantity) => {
+  return await connection()
+    .then((db) => db
+      .collection('products')
+      .updateMany({ _id: ObjectId(id) }, { $inc: { quantity: quantity } }));
+};
+
 const deleteProduct = async (id, { name, quantity}) => {
   return await connection()
     .then((db) => db
@@ -45,4 +52,5 @@ module.exports = {
   getAllProducts,
   updateProduct,
   deleteProduct,
+  decIncProduct,
 };
