@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const productsServices = require('../services/productsServices');
-const validateName = require('../midlleware/nameValidation');
-const validateQuantity = require('../midlleware/quantityValidation');
+const validateName = require('../middleware/nameValidation');
+const validateQuantity = require('../middleware/quantityValidation');
 
 const router = Router();
 const CREATED = 201;
