@@ -2,7 +2,7 @@ const { Router } = require('express');
 const rescue = require('express-rescue');
 const Sales = require('../models/Sales');
 const Products = require('../models/Products');
-const salesValidation = require('../schemas/salesValidation');
+const salesValidation = require('../service/salesValidation');
 
 const router = new Router();
 

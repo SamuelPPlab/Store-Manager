@@ -1,7 +1,7 @@
 const express = require('express');
 
-const productsController = require('./controllers/ProductsController');
-const salesController = require('./controllers/SalesController');
+const productsController = require('./controllers/ProductsControllers');
+const salesController = require('./controllers/SalesControllers');
 
 const app = express();
 app.use(express.json());
@@ -21,3 +21,4 @@ app.use('/sales', salesController);
 app.use((err, _req, res, _next) => {
   res.status(FAIL).json({ message: err.message });
 });
+

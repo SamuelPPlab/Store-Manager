@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const rescue = require('express-rescue');
 const Products = require('../models/Products');
-const { productValidation } = require('../schemas/productValidation');
+const { productValidation } = require('../service/productValidation');
 
 const router = new Router();
 
