@@ -1,5 +1,5 @@
 module.exports = async (req, res, next) => {
-  const products = req.body;
+  const products = await  req.body;
 
   const ERROR = 422;
 

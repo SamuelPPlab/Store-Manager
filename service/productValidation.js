@@ -1,10 +1,10 @@
 module.exports = {
   productValidation: (req, res, next) => {
     const { name, quantity } = req.body;
-  
+
     const ERROR = 422;
     const CINCO = 5;
-  
+
     if (name.length < CINCO) {
       return res.status(ERROR).json({
         err: {
@@ -26,7 +26,7 @@ module.exports = {
         },
       });
     }
-  
+
     next();
   }
 };

@@ -38,7 +38,7 @@ router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
   
-    const fetchedProduct = await Products.findById(id);
+    const fetchedProduct = await Products.findProductById(id);
 
     if (!fetchedProduct) {
       return res.status(ERROR).json(ERROR_MESSAGE);
@@ -55,8 +55,8 @@ router.put('/:id', productValidation, async (req, res) => {
     const { id } = req.params;
     const { name, quantity } = req.body;
 
-    await Products.update(id, name, quantity);
-    const modifiedProduct = await Products.findById(id);
+    await Products.updateProduct(id, name, quantity);
+    const modifiedProduct = await Products.findProductById(id);
 
     return res.status(OK).json(modifiedProduct);
   } catch (err) {
@@ -67,7 +67,7 @@ router.put('/:id', productValidation, async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const productToRemove = await Products.findById(id);
+    const productToRemove = await Products.findProductById(id);
 
     if (!productToRemove) {
       return res.status(ERROR).json({

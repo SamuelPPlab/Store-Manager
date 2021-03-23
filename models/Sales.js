@@ -1,15 +1,36 @@
 const connection = require('./Connection');
 const { ObjectId } = require('mongodb');
+const productModel = require('../models/Products');
+
+// const create = async (sale) => {
+//   const newSale = { itensSold: sale };
+//   const { insertedId } = await connection()
+//     .then((db) => db.collection('sales').insertOne(newSale));
+
+//   return {
+//     _id: insertedId,
+//     ...newSale,
+//   };
+// };
 
 const create = async (sale) => {
-  const newSale = { itensSold: sale };
   const { insertedId } = await connection()
-    .then((db) => db.collection('sales').insertOne(newSale));
+    .then((db) =>
+      db.collection(collection).insertOne({ itensSold: sale }),
+    );
+  const ZERO = 0;
+  const item = sale[0];
 
-  return {
-    _id: insertedId,
-    ...newSale,
-  };
+  const product = await productModel.findProductById(item.productId);
+
+  let newQuantity = product.quantity - item.quantity;
+
+  if (newQuantity < ZERO)
+    throw new throwError(status.notFound, errors.amountNotPermitted, 'stock_problem');
+
+  await productModel.updateProduct(item.productId, product.name, newQuantity);
+
+  return insertedId;
 };
 
 const getAll = async () => {
@@ -29,6 +50,14 @@ const update = async (id, sale) => {
       { $set: { itensSold: sale } }
     ));
 };
+
+// const updateQuantityOfProduct = async (id, sale) => {
+//     return await connection()
+//       .then((db) => db.collection('sales').updateOne(
+//         { _id: ObjectId(id) },
+//         { $set: { itensSold: sale } }
+//       ));
+//   };
 
 const remove = async (id) => {
   return await connection()
