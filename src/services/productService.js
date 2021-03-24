@@ -30,22 +30,16 @@ const getAllProducts = async () => {
 
 // Lista produtos por ID
 const findProductById = async (id) => {
-  const onlyOneProduct = await ProductModel.findProductById(id);
+  const productById = await ProductModel.findProductById(id);
 
-  return onlyOneProduct;
+  return productById;
 };
 
 // Atualizar produtos por ID
 const updateProduct = async (id, name, quantity) => {
-  await ProductModel.createProduct(id, name, quantity);
+  const updateProduct = await ProductModel.createProduct(id, name, quantity);
 
-  const resultUpdateProduct = {
-    _id: id,
-    name,
-    quantity,
-  };
-
-  return resultUpdateProduct;
+  return updateProduct;
 };
 
 // Remover produto

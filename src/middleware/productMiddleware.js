@@ -1,5 +1,5 @@
-const { status, errors, codeStatus } = require('../schemas/status');
 const rescue = require('express-rescue');
+const { status, errors, codeStatus } = require('../schemas/status');
 
 // Functions
 const theLengthLessThan = (value, number) => (!value || value.length < number);
@@ -45,7 +45,6 @@ const validateId = rescue((req, res, next) => {
     return res.status(status.unprocessableEntity)
       .json({ err: { code: codeStatus.invalidData, message: errors.idFormat }});
   };
-
 
   next();
 });
