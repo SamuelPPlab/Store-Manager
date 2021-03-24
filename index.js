@@ -2,6 +2,8 @@ const express = require('express');
 
 const routerProducts = require('./products/routerProducts');
 
+const routerSales = require('./sales/routerSales');
+
 const app = express();
 
 // tive problemas com o uso do bodyParser, acusando estar depreciado, então seguindo
@@ -16,5 +18,7 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/products', routerProducts);
+
+app.use('/sales', routerSales);
 
 app.listen(PORT, () => console.log('Esperando requisições na porta', PORT));
