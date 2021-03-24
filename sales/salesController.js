@@ -27,15 +27,40 @@ const findById = async (req, res) => {
   const { id } = req.params;
   console.log('ID', id);
 
-  const { productById, err } = await salesService.findById(id);
+  const { saleById, err } = await salesService.findById(id);
 
   if (err) return res.status(NOT_FOUND).json({err});
 
-  res.status(OK).json(productById);
+  res.status(OK).json(saleById);
 };
+
+const updateSale = async (req, res) => {
+  const { id } = req.params;
+  const sales = req.body;
+
+  const { UPDATED, updatedSale, err } =
+    await salesService.updateSale(id, sales);
+
+  if (err) return res.status(ERROR).json({err});
+
+  res.status(UPDATED).json(updatedSale);
+};
+
+const deleteSale = async (req, res) => {
+  const { id } = req.params;
+
+  const { OK, saleById, err } = await salesService.deleteSale(id);
+
+  if(err) return res.status(ERROR).json({err});
+
+  res.status(OK).json(saleById);
+};
+
 
 module.exports = {
   createSale,
   getAllSales,
-  findById
+  findById,
+  updateSale,
+  deleteSale,
 };
