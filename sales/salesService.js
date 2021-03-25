@@ -21,6 +21,11 @@ const createSale = async (sales) => {
   };
 
   const createdSale = await salesModel.createSale(sales);
+
+  if (!createdSale) return { err: {
+    code: 'stock_problem', message: 'Such amount is not permitted to sell'
+  }, statusCode: 404 };
+
   return { CREATED: 200, createdSale };
 };
 
@@ -34,7 +39,7 @@ const findById = async (id) => {
   if(id.length !== TAMANHO_ID)
     return { err: { code: 'not_found', message: 'Sale not found' } };
 
-  const saleById = await salesModel.findById(id);
+  const saleById = await salesModel.findByIdSale(id);
 
   if(!saleById)
     return { err: { code: 'not_found', message: 'Sale not found' } };
@@ -61,7 +66,7 @@ const deleteSale = async (id) => {
   if(id.length !== TAMANHO_ID)
     return { err: { code: 'invalid_data', message: 'Wrong sale ID format' } };
 
-  const saleById = await salesModel.findById(id);
+  const saleById = await salesModel.findByIdSale(id);
 
   const deletedSale = await salesModel.deleteSale(id);
 
