@@ -46,8 +46,7 @@ SalesRouter.get('/:id', async (req, res) => {
 SalesRouter.put('/:id', async (req, res) => {
   const itensSold = req.body;
   const id = req.params;
-  let checkBadData = false;
-  checkBadData = await itensSold.some(async(item) => {
+  const checkBadData = await itensSold.some(async(item) => {
     const product = await ProductsModel.getById(item.productId);
     return (!product || item.quantity <= ZERO || typeof item.quantity !== 'number');
   });
