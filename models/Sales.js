@@ -7,19 +7,19 @@ const create = async (sale) => {
   
   const { insertedId } = await connection()
     .then((db) => db.collection('sales').insertOne(newSale));
-    const ZERO = 0;
-    const item = sale[0];
-    console.log(item)
-    const product = await productModel.findProductById(item.productId);
-  console.log(item.productId)
+  const ZERO = 0;
+  const item = sale[0];
+  console.log(item);
+  const product = await productModel.findProductById(item.productId);
+  console.log(item.productId);
 
   let newQuantity = product.quantity - item.quantity;
-  console.log(newQuantity)
+  console.log(newQuantity);
 
   if (newQuantity < ZERO)
     throw new throwError(status.notFound, errors.amountNotPermitted, 'stock_problem');
 
-  await productModel.updateProduct(item.productId, product.name, newQuantity);
+  await productModel.updateProduct(item.productId, product.name, newQuantity );
 
   return insertedId;
   // return {
