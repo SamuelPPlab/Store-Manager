@@ -49,13 +49,8 @@ SalesRouter.put('/:id', async (req, res) => {
   let checkBadData = false;
   checkBadData = await itensSold.some(async(item) => {
     const product = await ProductsModel.getById(item.productId);
-    console.log(product);
-    console.log(item.quantity);
-    console.log(typeof item.quantity)
-    console.log(!product || item.quantity <= ZERO || typeof item.quantity !== 'number')
     return (!product || item.quantity <= ZERO || typeof item.quantity !== 'number');
   });
-  console.log(checkBadData, 'last')
   if (checkBadData) {
     const errorInfo = {
       message: 'Wrong product ID or invalid quantity',
@@ -89,7 +84,6 @@ SalesRouter.delete('/:id', async (req, res) => {
   } finally {
     const { id } = req.params;
     const sale = await SalesModel.getById(id);
-    console.log(sale)
     await SalesModel.delById(sale._id);
     return res.status(OK).json();
   }
