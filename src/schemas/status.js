@@ -20,6 +20,7 @@ const errors = {
 const codeStatus = {
   invalidData: 'invalid_data',
   notFound: 'not_found',
+  stockProblem: 'stock_problem',
 };
 
 module.exports = {

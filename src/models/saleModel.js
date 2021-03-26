@@ -21,7 +21,7 @@ const getAllSales = async () => {
 // Lista vendas por ID
 const findSaleById = async (id) => {
   const saleById = await connection()
-    .then((db) => db.collection('sales').findOne(ObjectId(id)));
+    .then((db) => db.collection('sales').findOne({ _id: ObjectId(id) }));
 
   return saleById;
 };

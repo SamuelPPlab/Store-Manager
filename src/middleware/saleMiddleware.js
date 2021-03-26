@@ -1,30 +1,33 @@
 const rescue = require('express-rescue');
-const { status, errors, codeStatus } = require('../schemas/status');
 
-const validateCreatedSale = rescue((req, res, next) => {
+const { status, errors, codeStatus } = require('../schemas/status');
+const ProductServices = require('../services/productService');
+
+const validateCreatedSale = rescue(async (req, res, next) => {
   const itensSold = req.body;
 
   const minValue = 0;
   const idLength = 24;
  
-  const verifyQuantity = itensSold.every((item) => {
+  itensSold.map(async (item) => {
     if ( item.quantity === '' ||
       item.quantity <= minValue ||
       typeof item.quantity !== 'number'
-    ) return false;
-    return true;
-  });
+    ) return res.status(status.unprocessableEntity)
+      .json({ err: { code: codeStatus.invalidData, message: errors.wrongIdOrQuantity } });
 
-  const verifyProductId = itensSold.every((item) => {
     if ( item.productId === '' ||
       item.productId.length !== idLength ||
       typeof item.productId !== 'string'
-    ) return false;
-    return true;
-  });
+    ) return res.status(status.unprocessableEntity)
+      .json({ err: { code: codeStatus.invalidData, message: errors.wrongIdOrQuantity } });
 
-  if (!verifyQuantity || !verifyProductId ) return res.status(status.unprocessableEntity)
-    .json({ err: { code: codeStatus.invalidData, message: errors.wrongIdOrQuantity } });
+    const product = await ProductServices.findProductById(item.productId);
+    const newQuantity = product.quantity - item.quantity;
+    if (newQuantity < minValue) return res.status(status.notFound).json(
+      { err: { code: codeStatus.stockProblem, message: errors.amountNotPermitted } }
+    );
+  });
 
   next();
 });
