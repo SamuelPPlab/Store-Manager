@@ -67,7 +67,7 @@ routes.delete('/:id', async (req, res) => {
     .json({ err: { code: codeStatus.notFound, message: errors.saleNotFound }});
   
   await SaleServices.deleteSale(id);
-
+  // vai rolar o teste? 
   return res.status(status.success).send(saleById);
 });
 
