@@ -1,24 +1,22 @@
 const express = require('express');
 
-const productsController = require('./controllers/ProductsControllers');
-const salesController = require('./controllers/SalesControllers');
-
 const app = express();
-app.use(express.json());
 
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
-
-const FAIL = 500;
+const port = 3000;
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.send();
 });
 
-app.use('/products', productsController);
-app.use('/sales', salesController);
-app.use((err, _req, res, _next) => {
-  res.status(FAIL).json({ message: err.message });
-});
+const bodyParser = require('body-parser');
+const { products } = require('./src/controller/products');
+const  { sales }  = require('./src/controller/sales');
 
+app.use(bodyParser.json());
+app.use('/', products);
+app.use('/', sales);
+
+app.listen(port, () => {
+  console.log(`Ouvindo na porta ${port}`);
+});
