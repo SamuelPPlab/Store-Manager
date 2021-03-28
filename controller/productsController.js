@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
   const { id } = req.body;
   const foundId = await productsServices.findProductsById(id);
 
-  res.status
+  res.status(OK).json({foundId});
 });
 
 router.post('/', validateName, validateQuantity, async (req, res) => {
