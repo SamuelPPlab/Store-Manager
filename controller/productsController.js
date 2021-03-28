@@ -4,6 +4,8 @@ const {
   createNewProduct,
   validateQuantity,
   getAllProductsService,
+  getProductById,
+  validateId,
 } = require('../service/productService');
 
 const Product = new Router();
@@ -20,6 +22,13 @@ Product.post('/', validateName, validateQuantity, async (req, res) => {
 Product.get('/', async (_req, res) => {
   const allProducts = await getAllProductsService();
   res.status(SUCCESS).json({ products: allProducts });
+});
+
+Product.get('/:id', validateId, async (req, res) => {
+  const { id } = req.params;
+  const product = await getProductById(id);
+
+  return res.status(SUCCESS).json(product);
 });
 
 module.exports = { Product };
