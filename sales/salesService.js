@@ -1,4 +1,5 @@
 const salesModel = require('./salesModel');
+const productsModel = require('../products/productsModel');
 
 const TAMANHO_ID = 24;
 const ZERO = 0;
@@ -18,6 +19,18 @@ const createSale = async (sales) => {
       return { err: {
         code: 'invalid_data', message: 'Wrong product ID or invalid quantity'
       } };
+  };
+
+  for (let i = ZERO; i < sales.length; i ++) {
+    let productId = sales[i].productId;
+    let product = await productsModel.findById(productId);
+    let newQuantity = sales[i].quantity;
+    let quantityStock = product.quantity;
+    if (newQuantity > quantityStock) {
+      return { err: {
+        code: 'stock_problem', message: 'Such amount is not permitted to sell'
+      }, statusCode: 404 };
+    }
   };
 
   const createdSale = await salesModel.createSale(sales);
@@ -47,6 +60,24 @@ const findById = async (id) => {
   return { saleById };
 };
 
+async function verifyStock(saleId, newArrayProductsSold) {
+  const registeredSale = await salesModel.findByIdSale(saleId);
+  const arrayProductsSold = registeredSale.itensSold;
+  for (let i = ZERO; i < arrayProductsSold.length; i ++) {
+    let productId = arrayProductsSold[i].productId;
+    let product = await productsModel.findById(productId);
+    let oldQuantity = arrayProductsSold[i].quantity;
+    let newQuantity = newArrayProductsSold[i].quantity;
+    let quantitiesSubtraction = newQuantity - oldQuantity;
+    let quantityStock = product.quantity;
+    if (quantitiesSubtraction > quantityStock) {
+      return { err: {
+        code: 'stock_problem', message: 'Such amount is not permitted to sell'
+      }, statusCode: 404 };
+    }
+  };
+};
+
 const updateSale = async (id, sales) => {
   const salesIds = sales.map((sale) => sale.productId);
   const salesQuantitys = sales.map((sale) => sale.quantity);
@@ -56,6 +87,11 @@ const updateSale = async (id, sales) => {
         code: 'invalid_data', message: 'Wrong product ID or invalid quantity'
       } };
   };
+
+  const verify = await verifyStock(id, sales);
+  if (verify) return { err: {
+    code: 'stock_problem', message: 'Such amount is not permitted to sell'
+  }, statusCode: 404 };
 
   const updatedSale = await salesModel.updateSale(id, sales);
 

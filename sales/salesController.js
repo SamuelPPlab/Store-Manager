@@ -9,8 +9,10 @@ const createSale = async (req, res) => {
 
   const sales = req.body;
 
-  const { CREATED, createdSale, err } = await
+  const { CREATED, createdSale, err, statusCode } = await
   salesService.createSale(sales);
+
+  if (statusCode) return res.status(NOT_FOUND).json({err});
 
   if (err) return res.status(ERROR).json({err});
 
@@ -25,7 +27,6 @@ const getAllSales = async (req, res) => {
 
 const findById = async (req, res) => {
   const { id } = req.params;
-  console.log('ID', id);
 
   const { saleById, err } = await salesService.findById(id);
 
@@ -38,8 +39,10 @@ const updateSale = async (req, res) => {
   const { id } = req.params;
   const sales = req.body;
 
-  const { UPDATED, updatedSale, err } =
+  const { UPDATED, updatedSale, err, statusCode } =
     await salesService.updateSale(id, sales);
+
+  if (statusCode) return res.status(NOT_FOUND).json({err});
 
   if (err) return res.status(ERROR).json({err});
 

@@ -36,25 +36,7 @@ const findByIdSale = async (id) => {
   return saleById;
 };
 
-
 const updateSale = async (id, sales) => {
-  // parte de atualizar a venda ainda falta refazer mas comparando o valor//
-  // da quantidade da venda antigo com o atual e só então decidir se vai somar ou subtrair
-
-  // recuperando o objeto da venda para ter as quantitdades antigas dessa venda
-  // const responseSale = await findByIdSale(id);
-  // console.log('RESPONSE SALES MODEL', responseSale);
-  // const objectsSales = responseSale.itensSold;
-  // objectsSales.forEach(async (sale) => {
-  //   const product = await productsModel.findById(sale.productId);
-  //   // quantidade atual em estoque do produto:
-  //   const oldQuantity = product.quantity;
-  //   if(oldQuantity > sale.quantity) {
-  //     productsModel.updateQuantityProduct(sale.productId, (oldQuantity - sale.quantity));
-  //   } else {
-  //     productsModel.updateQuantityProduct(sale.productId, (oldQuantity + sale.quantity));
-  //   }
-  // });
   await connection()
     .then((db) => db.collection('sales').updateOne(
       {_id: ObjectId(id)}, {$set: {itensSold: sales}}
@@ -64,9 +46,7 @@ const updateSale = async (id, sales) => {
 
 const deleteSale = async (id) => {
   const responseSale = await findByIdSale(id);
-  console.log('RESPONSE SALES MODEL', responseSale);
   const sales = responseSale.itensSold;
-  console.log('SALES salesModel ', sales);
   sales.forEach(async (sale) => {
     const product = await productsModel.findById(sale.productId);
     const oldQuantity = product.quantity;

@@ -8,14 +8,9 @@ const ZERO = 0;
 const createProduct = async (req, res) => {
   console.log('controller - products');
   const { name, quantity } = req.body;
-  console.log(name, quantity);
 
   const { CREATED, createdProduct, err } = await
   productsService.createProduct(name, quantity);
-
-  console.log('code NO CONTROLLER', CREATED);
-  console.log('insertedProductInfos NO CONTROLLER', createdProduct);
-  console.log('err NO CONTROLLER', err);
 
   if (err) return res.status(ERROR).json({err});
 
@@ -24,7 +19,6 @@ const createProduct = async (req, res) => {
 
 const getAll = async (req, res) => {
   const productsResponse = await productsService.getAll();
-  console.log('getAll - controller', productsResponse);
 
   // retirando a validação que havia colocado com o status 404 porque altera
   // o comportamento esperado por ele
@@ -36,7 +30,6 @@ const getAll = async (req, res) => {
 
 const findById = async (req, res) => {
   const { id } = req.params;
-  console.log('ID', id);
 
   const { productById, err } = await productsService.findById(id);
 
