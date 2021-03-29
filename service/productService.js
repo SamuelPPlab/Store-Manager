@@ -6,11 +6,13 @@ const {
   getAllProducts,
   createProduct,
   getProduct,
+  editProduct,
 } = require('../models/productModel');
 
 const createNewProduct = async (product) => await createProduct(product);
 const getAllProductsService = async () => await getAllProducts();
 const getProductById = async (id) => await getProduct(id);
+const putProduct = async (obj) => await editProduct(obj);
 
 const validateName = async (req, res, next) => {
   const { name } = req.body;
@@ -78,4 +80,5 @@ module.exports = {
   getAllProductsService,
   getProductById,
   validateId,
+  putProduct,
 };
