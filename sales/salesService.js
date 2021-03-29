@@ -129,10 +129,6 @@ const deleteSale = async (id) => {
 
   const saleById = await salesModel.findByIdSale(id);
 
-  console.log('sale no delete sale', saleById);
-
-  // pegar as quantidades da venda e somar novamente no estoque
-
   const deletedSale = await salesModel.deleteSale(id);
 
   if(!deletedSale)
