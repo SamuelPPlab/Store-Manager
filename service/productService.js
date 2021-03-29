@@ -73,6 +73,20 @@ const validateId = (req, res, next) => {
   next();
 };
 
+const validateNameEdit = async (req, res, next) => {
+  const { name } = req.body;
+  if (!name || name.length < MIN_NAME_LENGTH) {
+    return res.status(UNPROCESSABLE)
+      .json({
+        err: {
+          code: 'invalid_data',
+          message: '\"name"\ length must be at least 5 characters long'
+        }
+      });
+  }
+  next();
+};
+
 module.exports = {
   validateName,
   createNewProduct,
@@ -81,4 +95,5 @@ module.exports = {
   getProductById,
   validateId,
   putProduct,
+  validateNameEdit,
 };

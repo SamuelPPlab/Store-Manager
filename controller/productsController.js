@@ -7,6 +7,7 @@ const {
   getProductById,
   validateId,
   putProduct,
+  validateNameEdit,
 } = require('../service/productService');
 
 const Product = new Router();
@@ -32,7 +33,7 @@ Product.get('/:id', validateId, async (req, res) => {
   return res.status(SUCCESS).json(product);
 });
 
-Product.put('/:id', validateName, validateQuantity, async (req, res) => {
+Product.put('/:id', validateNameEdit, validateQuantity, async (req, res) => {
   const { id } = req.params;
   const { name, quantity } = req.body;
   const obj = { id, name, quantity };
