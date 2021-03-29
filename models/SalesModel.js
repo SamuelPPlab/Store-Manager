@@ -31,12 +31,12 @@ const getById = async (id) => {
   }
 };
 
-const update = async ({ _id, itensSold }) => {
+const update = async (id, itensSold) => {
   const db = await connection();
-  console.log(itensSold, ObjectId(_id));
+  console.log(itensSold, ObjectId(id));
   try {
-    const sale = await db.collection('sales').updateOne({ _id: ObjectId(_id) },
-      { $set: itensSold },
+    const sale = await db.collection('sales').updateOne({ _id: ObjectId(id) },
+      { $set: { itensSold } },
     );
   } catch (err) {
     console.log(err);
