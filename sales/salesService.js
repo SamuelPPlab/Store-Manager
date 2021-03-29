@@ -137,6 +137,8 @@ const deleteSale = async (id) => {
   return { OK: 200, saleById };
 };
 
+// pequeno comentário para novo commit de teste: local passando 100% e remoto 90%
+
 module.exports = {
   createSale,
   getAllSales,
