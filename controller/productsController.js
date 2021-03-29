@@ -37,9 +37,9 @@ Product.put('/:id', validateName, validateQuantity, async (req, res) => {
   const { name, quantity } = req.body;
   const obj = { id, name, quantity };
 
-  const product = await putProduct(obj);
+  await putProduct(obj);
 
-  return res.status(SUCCESS).json(product);
+  return res.status(SUCCESS).json(obj);
 });
 
 module.exports = { Product };
