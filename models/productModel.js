@@ -10,8 +10,8 @@ const getAllProducts = async () => connection()
 const getProduct = async (id) => connection()
   .then((db) => db.collection('products').findOne(ObjectId(id)));
 
-const editProduct = async (id, name, quantity) => connection()
-  .the((db) => db.collection('recipe').updateOne(
+const editProduct = async ({ id, name, quantity }) => connection()
+  .then((db) => db.collection('recipe').updateOne(
     { _id: ObjectId(id) },
     { $set: { name, quantity} },
   ));
