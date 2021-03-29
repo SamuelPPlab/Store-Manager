@@ -6,6 +6,7 @@ const {
   getAllProductsService,
   getProductById,
   validateId,
+  putProduct,
 } = require('../service/productService');
 
 const Product = new Router();
@@ -27,6 +28,16 @@ Product.get('/', async (_req, res) => {
 Product.get('/:id', validateId, async (req, res) => {
   const { id } = req.params;
   const product = await getProductById(id);
+
+  return res.status(SUCCESS).json(product);
+});
+
+Product.put('/:id', validateName, validateQuantity, async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+  const obj = { id, name, quantity };
+
+  const product = await putProduct(obj);
 
   return res.status(SUCCESS).json(product);
 });
