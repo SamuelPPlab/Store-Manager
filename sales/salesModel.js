@@ -8,17 +8,6 @@ const ZERO = 0;
 
 const createSale = async (sales) => {
   console.log('model - sales');
-  sales.forEach(async (sale) => {
-    const product = await productsModel.findById(sale.productId);
-    // quantidade atual em estoque do produto:
-    const oldQuantity = product.quantity;
-    // se a subtração der menor que zero deve retornar erro
-    if (oldQuantity - sale.quantity >= ZERO) {
-      productsModel.updateQuantityProduct(sale.productId, (oldQuantity - sale.quantity));
-    } else return { err: {
-      code: 'stock_problem', message: 'Such amount is not permitted to sell'
-    } };
-  });
   const { insertedId } =  await connection()
     .then((db) => db.collection('sales').insertOne({ itensSold: sales }));
   return { _id: insertedId, itensSold: sales };
@@ -46,12 +35,15 @@ const updateSale = async (id, sales) => {
 
 const deleteSale = async (id) => {
   const responseSale = await findByIdSale(id);
-  const sales = responseSale.itensSold;
-  sales.forEach(async (sale) => {
-    const product = await productsModel.findById(sale.productId);
-    const oldQuantity = product.quantity;
-    productsModel.updateQuantityProduct(sale.productId, (oldQuantity + sale.quantity));
+  const products = responseSale.itensSold;
+  products.forEach(async (product) => {
+    const productById = await productsModel.findById(product.productId);
+    const quantityStock = productById.quantity;
+    productsModel.updateQuantityProduct(
+      product.productId, (quantityStock + product.quantity)
+    );
   });
+
   const deletedSale = await connection()
     .then((db) => db.collection('sales').deleteOne({_id: ObjectId(id)}));
   return deletedSale;

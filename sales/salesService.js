@@ -15,7 +15,7 @@ const createSale = async (sales) => {
 
   const salesQuantitys = sales.map((sale) => sale.quantity);
   for(let i = ZERO; i <= salesIds.length - 1; i ++) {
-    if(typeof salesQuantitys[i] !== 'number' || salesQuantitys <= ZERO)
+    if(typeof salesQuantitys[i] !== 'number' || salesQuantitys[i] <= ZERO)
       return { err: {
         code: 'invalid_data', message: 'Wrong product ID or invalid quantity'
       } };
@@ -23,21 +23,24 @@ const createSale = async (sales) => {
 
   for (let i = ZERO; i < sales.length; i ++) {
     let productId = sales[i].productId;
+    let quantity = sales[i].quantity;
     let product = await productsModel.findById(productId);
-    let newQuantity = sales[i].quantity;
     let quantityStock = product.quantity;
-    if (newQuantity > quantityStock) {
+    if (quantity > quantityStock) {
       return { err: {
         code: 'stock_problem', message: 'Such amount is not permitted to sell'
       }, statusCode: 404 };
     }
   };
 
-  const createdSale = await salesModel.createSale(sales);
+  sales.forEach(async (sale) => {
+    const product = await productsModel.findById(sale.productId);
+    productsModel.updateQuantityProduct(
+      sale.productId, (product.quantity - sale.quantity)
+    );
+  });
 
-  if (!createdSale) return { err: {
-    code: 'stock_problem', message: 'Such amount is not permitted to sell'
-  }, statusCode: 404 };
+  const createdSale = await salesModel.createSale(sales);
 
   return { CREATED: 200, createdSale };
 };
@@ -60,38 +63,60 @@ const findById = async (id) => {
   return { saleById };
 };
 
-async function verifyStock(saleId, newArrayProductsSold) {
+async function verifyStock(saleId, sales) {
   const registeredSale = await salesModel.findByIdSale(saleId);
   const arrayProductsSold = registeredSale.itensSold;
   for (let i = ZERO; i < arrayProductsSold.length; i ++) {
+    let oldQuantity = arrayProductsSold[i].quantity;
+    let newQuantity = sales[i].quantity;
     let productId = arrayProductsSold[i].productId;
     let product = await productsModel.findById(productId);
-    let oldQuantity = arrayProductsSold[i].quantity;
-    let newQuantity = newArrayProductsSold[i].quantity;
-    let quantitiesSubtraction = newQuantity - oldQuantity;
     let quantityStock = product.quantity;
+    let quantitiesSubtraction = newQuantity - oldQuantity;
     if (quantitiesSubtraction > quantityStock) {
-      return { err: {
-        code: 'stock_problem', message: 'Such amount is not permitted to sell'
-      }, statusCode: 404 };
+      return false;
     }
+  };
+  return true;
+};
+
+async function updateProductQuantity(saleId, sales) {
+  const registeredSale = await salesModel.findByIdSale(saleId);
+  const arrayProductsSold = registeredSale.itensSold;
+  for (let i = ZERO; i < arrayProductsSold.length; i ++) {
+    let oldQuantity = arrayProductsSold[i].quantity;
+    let newQuantity = sales[i].quantity;
+    let productId = arrayProductsSold[i].productId;
+    let product = await productsModel.findById(productId);
+    let quantityStock = product.quantity;
+    let quantitiesSubtraction = newQuantity - oldQuantity;
+    const subtraction = quantityStock - quantitiesSubtraction;
+    await productsModel.updateQuantityProduct(productId, subtraction);
   };
 };
 
 const updateSale = async (id, sales) => {
+  console.log('SALES NO SERVICE', sales);
+
   const salesIds = sales.map((sale) => sale.productId);
+  for(let i = ZERO; i <= salesIds.length - 1; i ++) {
+    if(salesIds[i].length !== TAMANHO_ID)
+      return { err: { code: 'invalid_data', message: 'Wrong id format' } };
+  };
   const salesQuantitys = sales.map((sale) => sale.quantity);
   for(let i = ZERO; i <= salesIds.length - 1; i ++) {
-    if(typeof salesQuantitys[i] !== 'number' || salesQuantitys <= ZERO)
+    if(typeof salesQuantitys[i] !== 'number' || salesQuantitys[i] <= ZERO)
       return { err: {
         code: 'invalid_data', message: 'Wrong product ID or invalid quantity'
       } };
   };
 
   const verify = await verifyStock(id, sales);
-  if (verify) return { err: {
+  if (!verify) return { err: {
     code: 'stock_problem', message: 'Such amount is not permitted to sell'
   }, statusCode: 404 };
+
+  await updateProductQuantity(id, sales);
 
   const updatedSale = await salesModel.updateSale(id, sales);
 
@@ -103,6 +128,10 @@ const deleteSale = async (id) => {
     return { err: { code: 'invalid_data', message: 'Wrong sale ID format' } };
 
   const saleById = await salesModel.findByIdSale(id);
+
+  console.log('sale no delete sale', saleById);
+
+  // pegar as quantidades da venda e somar novamente no estoque
 
   const deletedSale = await salesModel.deleteSale(id);
 
