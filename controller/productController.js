@@ -4,63 +4,49 @@ const {
   ProductList,
   findById,
   update,
-  remove,
-  findSalesById,
-  salesList,
-  createSales,
-  saleUpdate,
-  salesRemove
+  remove
 } = require('../service/storeService');
 
-const saleController = new Router();
+const productController = new Router();
 const { ObjectId } = require('mongodb');
-const {
-  validateCreate,
-  rightId,
-  nameExist,
-  salesId,
-  checkQuantitySold,
-  rightIdSales,
-  updateStock,
-  resetStock
-} = require('../middleware/storeMiddleware');
+const { validateCreate, rightId, nameExist } = require('../middleware/storeMiddleware');
 
-saleController.get('/', async (req, res) => {
-  const list = await salesList();
+productController.get('/', async (_req, res) => {
+  const list = await ProductList();
   const okay = 200;
-
-  res.status(okay).json({ sales: list });
+  res.status(okay).json({ products: list });
 });
-saleController.get('/:id', salesId, async (req, res) => {
+
+productController.get('/:id', rightId, async (req, res) => {
   const { id } = req.params;
   const okay = 200;
-  const salesById = await findSalesById(id);
-  res.status(okay).json(salesById);
+  const productById = await findById(id);
+
+  res.status(okay).json(productById);
 });
-saleController.post('/', checkQuantitySold, updateStock, async (req, res) => {
-  const deBoa = 200;
-  const products = req.body;
-  const { ops } = await createSales(products);
+
+productController.post('/', validateCreate, nameExist, async (req, res) => {
+  const deBoa = 201;
+  const product = req.body;
+  const { ops } = await createProduct(product);
 
   res.status(deBoa).json(ops[0]);
 });
-
-saleController.put('/:id', checkQuantitySold, async (req, res) => {
+productController.put('/:id', validateCreate, async (req, res) => {
   const { id } = req.params;
-  const products = req.body;
-  console.log();
+  const { name, quantity } = req.body;
   const okay = 200;
-  await saleUpdate(id, products);
+  await update(id, name, quantity);
 
-  res.status(okay)
-    .json({ _id: id, itensSold: products });
+  res.status(okay).json({ _id: id, name: name, quantity: quantity });
 });
-saleController.delete('/:id', rightIdSales, resetStock, async (req, res) => {
+productController.delete('/:id', rightId, async (req, res) => {
   const { id } = req.params;
+  const deleData = await findById(id);
   const okay = 200;
-  const salesById = await findSalesById(id);
-  await salesRemove(id);
+  await remove(id);
 
-  res.status(okay).json(salesById);
+  res.status(okay).json(deleData);
 });
-module.exports = saleController;
+
+module.exports = productController;

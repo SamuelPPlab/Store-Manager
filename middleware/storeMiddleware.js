@@ -117,7 +117,6 @@ const updateStock = async (req, res, next) => {
   const [{ productId, quantity }] = req.body;
   const productIten = await findById(productId);
   const updateStock = (productIten.quantity - quantity);
-  //console.log(productIten._id);
   if (updateStock < zero) return res
     .status(notFound).json({
       err:
