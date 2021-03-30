@@ -13,6 +13,7 @@ const createNewProduct = async (product) => await createProduct(product);
 const getAllProductsService = async () => await getAllProducts();
 const getProductById = async (id) => await getProduct(id);
 const putProduct = async (obj) => await editProduct(obj);
+const deleteProduct = async (id) => await delProduct(id);
 
 const validateName = async (req, res, next) => {
   const { name } = req.body;
@@ -96,4 +97,5 @@ module.exports = {
   validateId,
   putProduct,
   validateNameEdit,
+  deleteProduct,
 };
