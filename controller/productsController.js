@@ -8,6 +8,7 @@ const {
   validateId,
   putProduct,
   validateNameEdit,
+  delProduct
 } = require('../service/productService');
 
 const Product = new Router();
@@ -41,6 +42,14 @@ Product.put('/:id', validateNameEdit, validateQuantity, async (req, res) => {
   await putProduct(obj);
 
   return res.status(SUCCESS).json(obj);
+});
+
+Product.delete('/:id', validateId, async (req, res) => {
+  const { id } = req.params;
+
+  await delProduct(id);
+
+  res.status(SUCCESS).send();
 });
 
 module.exports = { Product };
