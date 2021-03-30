@@ -16,7 +16,7 @@ const editProduct = async ({ id, name, quantity }) => connection()
     { $set: { name, quantity} },
   ));
 
-const deleteProduct = async (id) => connection()
+const delProduct = async (id) => connection()
   .then((db) => db.collection('recipe').deleteOne({ _id: Object(id) }));
 
 module.exports = {
@@ -24,5 +24,5 @@ module.exports = {
   getAllProducts,
   getProduct,
   editProduct,
-  deleteProduct,
+  delProduct,
 };
