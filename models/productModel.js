@@ -11,13 +11,13 @@ const getProduct = async (id) => connection()
   .then((db) => db.collection('products').findOne(ObjectId(id)));
 
 const editProduct = async ({ id, name, quantity }) => connection()
-  .then((db) => db.collection('recipe').updateOne(
+  .then((db) => db.collection('products').updateOne(
     { _id: ObjectId(id) },
     { $set: { name, quantity} },
   ));
 
 const delProduct = async (id) => connection()
-  .then((db) => db.collection('recipe').deleteOne({ _id: Object(id) }));
+  .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }));
 
 module.exports = {
   createProduct,
