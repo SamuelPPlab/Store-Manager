@@ -12,7 +12,7 @@ const connection = () => {
     .then((conn) => conn.db('StoreManager'))
     .catch((err) => {
       console.error(err);
-      process.exit(1);
+      process.exit();
     });
 };
 
