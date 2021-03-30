@@ -7,6 +7,7 @@ const {
   createProduct,
   getProduct,
   editProduct,
+  delProduct
 } = require('../models/productModel');
 
 const createNewProduct = async (product) => await createProduct(product);
