@@ -1,9 +1,7 @@
 const { MongoClient } = require('mongodb');
 
-// const MONGO_DB_URL = 'mongodb://localhost:27017/StoreManager';
-const MONGO_DB_URL = 'mongodb://mongodb:27017/StoreManager';
-
-const DB_NAME = 'StoreManager';
+// const MONGO_DB_URL = 'mongodb://localhost:27017/StoreManager'; // local
+const MONGO_DB_URL = 'mongodb://mongodb:27017/StoreManager'; //evaluator
 
 const connection = () => {
   return MongoClient
@@ -11,10 +9,10 @@ const connection = () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
-    .then((conn) => conn.db(DB_NAME))
+    .then((conn) => conn.db('StoreManager'))
     .catch((err) => {
       console.error(err);
-      process.exit();
+      process.exit(1);
     });
 };
 
