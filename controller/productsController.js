@@ -8,7 +8,7 @@ const {
   validateId,
   putProduct,
   validateNameEdit,
-  delProduct
+  deleteProduct
 } = require('../service/productService');
 
 const Product = new Router();
@@ -47,7 +47,7 @@ Product.put('/:id', validateNameEdit, validateQuantity, async (req, res) => {
 Product.delete('/:id', validateId, async (req, res) => {
   const { id } = req.params;
 
-  await delProduct(id);
+  await deleteProduct(id);
 
   res.status(SUCCESS).send();
 });
