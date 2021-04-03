@@ -1,7 +1,7 @@
 const MIN_QUANTITY = 0;
 const UNPROCESSABLE = 422;
 
-const validateQuantity = async (req, res, next) => {
+const validateSaleQuantity = async (req, res, next) => {
   req.body.forEach((item) => {
     const { quantity } = item;
     if (!quantity || quantity <= MIN_QUANTITY || typeof quantity !== 'number') {
@@ -16,4 +16,4 @@ const validateQuantity = async (req, res, next) => {
   next();
 };
 
-module.exports = { validateQuantity };
+module.exports = { validateSaleQuantity };
