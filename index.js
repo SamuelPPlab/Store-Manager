@@ -12,5 +12,4 @@ app.use('/products', productController);
 app.get('/', (_request, response) => {
   response.send();
 });
-
 app.listen(PORT, () => console.log('ouvindo na porta 3000')); 

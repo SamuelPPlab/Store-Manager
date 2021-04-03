@@ -13,5 +13,4 @@ productController.post('/', validateCreate, async (req, res) => {
 
   res.status(deBoa).json(ops[0]);
 });
-
 module.exports = productController; 
