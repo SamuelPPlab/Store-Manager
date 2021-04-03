@@ -16,4 +16,24 @@ const validateSaleQuantity = async (req, res, next) => {
   next();
 };
 
-module.exports = { validateSaleQuantity };
+const validateProductId = async (req, res, next) => {
+  req.body.forEach( async (item) => {
+    const { productId } = item;
+    const product = await getProductById(productId);
+    if (!ObjectId.isValid(productId) || !product) {
+      return res.status(twoHundredTwentyTwo).json({
+        err: {
+          code: 'invalid_data',
+          message: 'Wrong product ID or invalid quantity'
+        }
+      });
+    }
+  });
+
+  next();
+};
+
+module.exports = {
+  validateSaleQuantity,
+  validateProductId,
+};
