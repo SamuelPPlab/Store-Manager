@@ -1,3 +1,6 @@
+const { ObjectId } = require('mongodb');
+const { getProduct } = require('../models/productModel');
+
 const MIN_QUANTITY = 0;
 const UNPROCESSABLE = 422;
 
@@ -19,7 +22,7 @@ const validateSaleQuantity = async (req, res, next) => {
 const validateProductId = async (req, res, next) => {
   req.body.forEach( async (item) => {
     const { productId } = item;
-    const product = await getProductById(productId);
+    const product = await getProduct(productId);
     if (!ObjectId.isValid(productId) || !product) {
       return res.status(twoHundredTwentyTwo).json({
         err: {
