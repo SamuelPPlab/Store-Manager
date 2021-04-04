@@ -48,7 +48,7 @@ SalesRouter.put('/:id', itemValidation, async (req, res) => {
   const itensSold = req.body;
   const { id } = req.params;
   await SalesModel.update(id, itensSold);
-  return res.status(OK).json({ id, itensSold });
+  return res.status(OK).json({ _id: id, itensSold });
 });
 
 SalesRouter.delete('/:id', async (req, res) => {
