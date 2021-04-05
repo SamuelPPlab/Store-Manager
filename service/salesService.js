@@ -4,6 +4,7 @@ const { getSales, getById } = require('../models/saleModel');
 
 const MIN_QUANTITY = 0;
 const UNPROCESSABLE = 422;
+const NOT_FOUND = 404;
 
 const getAllSales = async () => await getSales();
 const getSaleById = async (id) => await getById(id);
@@ -40,9 +41,21 @@ const validateProductId = async (req, res, next) => {
   next();
 };
 
+const validateSaleId = async (req, res, next) => {
+  const { id } = req.params;
+  if (!ObjectId.isValid(id)) return res.status(NOT_FOUND).json({
+    err:{
+      code: 'not_found',
+      message: 'Sale not found',
+    }
+  });
+  next();
+};
+
 module.exports = {
   validateSaleQuantity,
   validateProductId,
   getAllSales,
   getSaleById,
+  validateSaleId,
 };
