@@ -10,6 +10,10 @@ const salesProduct = async (data) => {
   };
 };
 
+const getSales = async () => connection()
+  .then((db) => db.collection('sales').find().toArray);
+
 module.exports ={
-  salesProduct
+  salesProduct,
+  getSales,
 };
