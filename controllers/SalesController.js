@@ -22,8 +22,32 @@ SalesRouter.post('/', async (req, res) => {
       .json({ err: errorInfo });
     
   }
-  const { _id } = await SalesModel.create(itensSold);
-  return res.status(OK).send({ _id, itensSold });
+
+  const forLoop = async () => {
+    for (let i = ZERO; i < itensSold.length; i += 1) {
+      const product = await ProductsModel.getById(itensSold[i].productId);
+      if (product) {
+        if (product.quantity >= itensSold[i].quantity) {
+          const newProduct = {
+            _id: itensSold[i].productId,
+            name: product.name,
+            quantity: product.quantity - itensSold[i].quantity,
+          };
+          await ProductsModel.update(newProduct);
+        } else {
+          const errorInfo = {
+            message: 'Such amount is not permitted to sell',
+            code: 'stock_problem'
+          };
+          return res.status(NOT_FOUND)
+            .json({ err: errorInfo });
+        }
+      }
+    }
+    const { _id } = await SalesModel.create(itensSold);
+    return res.status(OK).send({ _id, itensSold });
+  };
+  forLoop();
 });
 
 SalesRouter.get('/', async (_req, res) => {
@@ -71,6 +95,22 @@ SalesRouter.delete('/:id', async (req, res) => {
   } finally {
     const { id } = req.params;
     const sale = await SalesModel.getById(id);
+
+
+    const anotherLoop = async () => {
+      for (let i = ZERO; i < sale.itensSold.length; i += 1) {
+        console.log(sale);
+        const product = await ProductsModel.getById(sale.itensSold[i].productId);
+        console.log(product);
+        const anotherNewProduct = {
+          _id: sale.itensSold[i].productId,
+          name: product.name,
+          quantity: sale.itensSold[i].quantity + product.quantity,
+        };
+        await ProductsModel.update(anotherNewProduct);
+      }
+    };
+    anotherLoop();
     await SalesModel.delById(sale._id);
     return res.status(OK).json();
   }
