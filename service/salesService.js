@@ -56,6 +56,7 @@ const validateSaleId = async (req, res, next) => {
 module.exports = {
   validateSaleQuantity,
   validateProductId,
+  validadeSaleId,
   getAllSales,
   getSaleById,
   validateSaleId,
