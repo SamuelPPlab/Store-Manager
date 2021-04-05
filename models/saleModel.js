@@ -13,7 +13,7 @@ const salesProduct = async (data) => {
 const getSales = async () => connection()
   .then((db) => db.collection('sales').find().toArray);
 
-const getById = async () => connection()
+const getById = async (id) => connection()
   .then((db) => db.collection('sales').findOne(ObjectId(id)));
 
 module.exports ={
