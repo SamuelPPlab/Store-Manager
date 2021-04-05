@@ -9,6 +9,8 @@ const {
   validateSale,
   getAllSales,
   getSaleById,
+  validateDeleteId,
+  deleteSale,
 } = require('../service/salesService');
 const { salesProduct } =require('../models/saleModel');
 
@@ -41,6 +43,14 @@ Sales.put('/:id', validateSaleId, validateSale, async (req, res) => {
   await editSales(id, req.body);
   const sale = await getSaleById(id);
   return res.status(SUCCESS).json(sale);
+});
+
+Sales.delete('/:id', validateDeleteId, async (req, res) => {
+  const { id } = req.params;
+  const sale = await getSaleById(id);
+  await deleteSale(id);
+
+  res.status(SUCCESS).json(sale);
 });
 
 module.exports = { Sales };
