@@ -16,8 +16,15 @@ const getSales = async () => connection()
 const getById = async (id) => connection()
   .then((db) => db.collection('sales').findOne(ObjectId(id)));
 
+const editSalesDb = async (id, data) => connection()
+  .then((db) => db.collection('sales').updateOne(
+    { _id: ObjectId(id) },
+    { $set: { itensSold: data } },
+  ));
+
 module.exports ={
   salesProduct,
   getSales,
   getById,
+  editSalesDb,
 };
