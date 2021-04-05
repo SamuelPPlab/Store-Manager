@@ -11,6 +11,8 @@ const {
   getSaleById,
   validateDeleteId,
   deleteSale,
+  editQuantityAfterSale,
+  editAfterDelete,
 } = require('../service/salesService');
 const { salesProduct } =require('../models/saleModel');
 
@@ -50,6 +52,8 @@ Sales.delete('/:id', validateDeleteId, async (req, res) => {
   const { id } = req.params;
   const sale = await getSaleById(id);
   await deleteSale(id);
+
+  await editAfterDelete(sale);
 
   res.status(SUCCESS).json(sale);
 });
