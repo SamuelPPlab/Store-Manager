@@ -38,7 +38,7 @@ Sales.get('/:id', validateSaleId, async ( req, res) => {
 Sales.put('/:id', async (req, res) => {
   const { id } = req.params;
   await editSales(id, req.body);
-  const sale = await getSalesById(id);
+  const sale = await getSaleById(id);
   return res.status(SUCCESS).json(sale);
 });
 
