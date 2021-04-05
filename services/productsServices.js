@@ -7,7 +7,7 @@ const getAllProducts = async() => {
 };
 
 const findProductByName = async(name) => {
-  const foundName = await Products.findProductByName(name);
+  const foundName = await Products.findProductsByName(name);
 
   return foundName;
 };
@@ -24,9 +24,23 @@ const createProduct = async(name, quantity) => {
   return newProduct;
 };
 
+const updateProducts = async(id, name, quantity) => {
+  const productUpdate = await Products.updateProducts(id, name, quantity);
+  
+  return productUpdate;
+};
+
+const deleteProducts = async(id) => {
+  const productsDelete = await Products.deleteProducts(id);
+  
+  return productsDelete;
+};
+
 module.exports = {
   getAllProducts,
   findProductByName,
   findProductsById,
   createProduct,
+  updateProducts,
+  deleteProducts,
 };

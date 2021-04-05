@@ -1,20 +1,19 @@
 const productsServices = require('../services/productsServices');
 
 const UNPROCESSABLE_ENTITY = 422;
-const NUMBER_MIN_LENGTH = 5;
 
-const validateName = async (req, res, next) => {
+const nameExist = async (req, res, next) => {
   const { name } = req.body;
   const foundName = await productsServices.findProductByName(name);
-  if (name.length < NUMBER_MIN_LENGTH) {
+  if (foundName) {
     return res.status(UNPROCESSABLE_ENTITY).json({
       err: {
         code: 'invalid_data',
-        message: '"name" length must be at least 5 characters long',
+        message: 'Product already exists',
       },
     });
   }
   next();
 };
 
-module.exports = validateName;
+module.exports = nameExist;
