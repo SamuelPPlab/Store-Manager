@@ -6,7 +6,7 @@ const MIN_QUANTITY = 0;
 const UNPROCESSABLE = 422;
 
 const getAllSales = async () => await getSales();
-const getSaleById = async () => await getById();
+const getSaleById = async (id) => await getById(id);
 
 const validateSaleQuantity = async (req, res, next) => {
   req.body.forEach((item) => {
