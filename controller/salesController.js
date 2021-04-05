@@ -14,4 +14,9 @@ Sales.post('/', validateSaleQuantity, validateProductId, async (req, res) => {
   return res.status(SUCCESS).json(sale);
 });
 
+Sales.get('/', async (req, res) => {
+  const allSales = await getAllSales();
+  return res.status(SUCCESS).json({ sales: allSales });
+});
+
 module.exports = { Sales };
