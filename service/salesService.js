@@ -1,8 +1,12 @@
 const { ObjectId } = require('mongodb');
 const { getProduct } = require('../models/productModel');
+const { getSales, getById } = require('../models/saleModel');
 
 const MIN_QUANTITY = 0;
 const UNPROCESSABLE = 422;
+
+const getAllSales = async () => await getSales();
+const getSaleById = async () => await getById();
 
 const validateSaleQuantity = async (req, res, next) => {
   req.body.forEach((item) => {
@@ -39,4 +43,6 @@ const validateProductId = async (req, res, next) => {
 module.exports = {
   validateSaleQuantity,
   validateProductId,
+  getAllSales,
+  getSaleById,
 };
