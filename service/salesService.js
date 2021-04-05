@@ -53,12 +53,24 @@ const validateSaleId = async (req, res, next) => {
   next();
 };
 
+const validateDeleteId = (req, res, next) => {
+  const { id } = req.params;
+  if (!ObjectId.isValid(id)) return res.status(UNPROCESSABLE).json({
+    err: {
+      code: 'invalid_data',
+      message: 'Wrong sale ID format',
+    }
+  });
+
+  next();
+};
+
 module.exports = {
   validateSaleQuantity,
   validateProductId,
-  validadeSaleId,
-  getAllSales,
-  getSaleById,
   validateSaleId,
+  getAllSales,
+  validateDeleteId,
+  getSaleById,
   editSales,
 };

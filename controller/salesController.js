@@ -6,8 +6,8 @@ const {
   validateSaleQuantity,
   validateProductId,
   validateSaleId,
-  validateSale,
   getAllSales,
+  editSales,
   getSaleById,
   validateDeleteId,
   deleteSale,
@@ -38,7 +38,7 @@ Sales.get('/:id', validateSaleId, async ( req, res) => {
   return res.status(SUCCESS).json(saleById);
 });
 
-Sales.put('/:id', validateSaleId, validateSale, async (req, res) => {
+Sales.put('/:id', validateSaleId, validateSaleQuantity, async (req, res) => {
   const { id } = req.params;
   await editSales(id, req.body);
   const sale = await getSaleById(id);
