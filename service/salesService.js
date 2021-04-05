@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { getProduct } = require('../models/productModel');
-const { getSales, getById, editSalesDb } = require('../models/saleModel');
+const { getSales, getById, editSalesDb, deleteSalesDb } = require('../models/saleModel');
 
 const MIN_QUANTITY = 0;
 const UNPROCESSABLE = 422;
