@@ -6,6 +6,7 @@ const {
   validateSaleQuantity,
   validateProductId,
   validateSaleId,
+  validateSale,
   getAllSales,
   getSaleById,
 } = require('../service/salesService');
@@ -35,7 +36,7 @@ Sales.get('/:id', validateSaleId, async ( req, res) => {
   return res.status(SUCCESS).json(saleById);
 });
 
-Sales.put('/:id', async (req, res) => {
+Sales.put('/:id', validateSaleId, validateSale, async (req, res) => {
   const { id } = req.params;
   await editSales(id, req.body);
   const sale = await getSaleById(id);
