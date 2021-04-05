@@ -22,9 +22,13 @@ const editSalesDb = async (id, data) => connection()
     { $set: { itensSold: data } },
   ));
 
+const deleteSalesDb = (id) => connection()
+  .then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }));
+
 module.exports ={
   salesProduct,
   getSales,
   getById,
   editSalesDb,
+  deleteSalesDb,
 };
