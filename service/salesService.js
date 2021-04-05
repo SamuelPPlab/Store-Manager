@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { getProduct } = require('../models/productModel');
+const { getProduct, editProduct } = require('../models/productModel');
 const { getSales, getById, editSalesDb, deleteSalesDb } = require('../models/saleModel');
 
 const MIN_QUANTITY = 0;
@@ -31,7 +31,7 @@ const validateProductId = async (req, res, next) => {
     const { productId } = item;
     const product = await getProduct(productId);
     if (!ObjectId.isValid(productId) || !product) {
-      return res.status(twoHundredTwentyTwo).json({
+      return res.status(UNPROCESSABLE).json({
         err: {
           code: 'invalid_data',
           message: 'Wrong product ID or invalid quantity'
@@ -66,6 +66,20 @@ const validateDeleteId = (req, res, next) => {
   next();
 };
 
+const editQuantityAfterSale = async (sale) => {
+  const { itensSold } = sale;
+  itensSold.forEach(async(item) => {
+    const { quantity, productId } = item;
+    const product = await getProduct(productId);
+    const { name, quantity: quantityActual } = product;
+    const newQuantity = quantityActual - quantity;
+    if (newQuantity <= MIN_QUANTITY) {
+      return res.status(UNPROCESSABLE).json({ message:'nao tem itens suficientes' });
+    }
+    await editProduct({ productId, name, newQuantity });
+  });
+};
+
 module.exports = {
   validateSaleQuantity,
   validateProductId,
@@ -75,4 +89,5 @@ module.exports = {
   getSaleById,
   editSales,
   deleteSale,
+  editQuantityAfterSale,
 };

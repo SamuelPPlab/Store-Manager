@@ -13,7 +13,7 @@ const getProduct = async (id) => connection()
 const editProduct = async ({ id, name, quantity }) => connection()
   .then((db) => db.collection('products').updateOne(
     { _id: ObjectId(id) },
-    { $set: { name, quantity} },
+    { $set: { name, quantity } },
   ));
 
 const delProduct = async (id) => connection()
