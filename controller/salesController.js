@@ -18,6 +18,7 @@ const Sales = new Router();
 
 Sales.post('/', validateSaleQuantity, validateProductId, async (req, res) => {
   const sale = await salesProduct(req.body);
+  await editQuantityAfterSale(sale);
   return res.status(SUCCESS).json(sale);
 });
 
