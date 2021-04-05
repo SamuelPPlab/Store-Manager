@@ -21,7 +21,7 @@ const Sales = new Router();
 Sales.post('/', validateSaleQuantity, validateProductId, async (req, res) => {
   const sale = await salesProduct(req.body);
   await editQuantityAfterSale(sale);
-  return res.status(SUCCESS).json(sale);
+  await res.status(SUCCESS).json(sale);
 });
 
 Sales.get('/', async (_req, res) => {
@@ -55,7 +55,7 @@ Sales.delete('/:id', validateDeleteId, async (req, res) => {
 
   await editAfterDelete(sale);
 
-  res.status(SUCCESS).json(sale);
+  await res.status(SUCCESS).json(sale);
 });
 
 module.exports = { Sales };
