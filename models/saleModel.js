@@ -1,5 +1,5 @@
 const connection = require('./connection');
-// const { ObjectId } = require('mongodb');
+const { ObjectId } = require('mongodb');
 
 const salesProduct = async (data) => {
   const sales = await connection()
@@ -11,7 +11,7 @@ const salesProduct = async (data) => {
 };
 
 const getSales = async () => connection()
-  .then((db) => db.collection('sales').find().toArray);
+  .then((db) => db.collection('sales').find().toArray());
 
 const getById = async (id) => connection()
   .then((db) => db.collection('sales').findOne(ObjectId(id)));
