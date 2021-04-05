@@ -9,6 +9,7 @@ const NOT_FOUND = 404;
 const getAllSales = async () => await getSales();
 const getSaleById = async (id) => await getById(id);
 const editSales = async (id, data) => await editSalesDb(id, data);
+const deleteSale = async (id) => await deleteSalesDb(id);
 
 const validateSaleQuantity = async (req, res, next) => {
   req.body.forEach((item) => {
@@ -73,4 +74,5 @@ module.exports = {
   validateDeleteId,
   getSaleById,
   editSales,
+  deleteSale,
 };
