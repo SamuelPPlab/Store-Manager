@@ -60,7 +60,7 @@ ProductsController.post('/', async (req, res) => {
   }
 
   const { insertedId } = await createProduct(name, quantity);
-  const response = { id: insertedId, name, quantity };
+  const response = { _id: insertedId, name, quantity };
   res.status(CREATED).json(response);
 });
 

@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { createSale, getAllSales, getSaleById,
   updateSale, deleteSale } = require('../models/salesModel');
-const { salesValidator } = require('../services/salesValidator');
+const salesValidator = require('../services/salesValidator');
 const stockChecker = require('../services/stockChecker');
 const idValidator = require('../services/idValidator');
 
@@ -9,11 +9,12 @@ const SalesController = new Router();
 
 const SUCCESS = 200;
 const CREATED = 201;
+const NOT_FOUND = 404;
 const UNPROCESSABLE_ENTITY = 422;
 
 const notFound = {
   err: {
-    code: 'invalid_data',
+    code: 'not_found',
     message: 'Sale not found',
   },
 };
@@ -21,7 +22,7 @@ const notFound = {
 const wrongSaleId = {
   err: {
     code: 'invalid_data',
-    message: 'Wrong sale id format',
+    message: 'Wrong sale ID format',
   },
 };
 
@@ -34,9 +35,12 @@ SalesController.get('/:id', async (req, res) => {
   const { id } = req.params;
   const isIdValid = idValidator(id);
   if (!isIdValid) {
-    return res.status(UNPROCESSABLE_ENTITY).json(notFound);
+    return res.status(NOT_FOUND).json(notFound);
   }
   const sale = await getSaleById(id);
+  if (!sale) {
+    return res.status(NOT_FOUND).json(notFound);
+  }
   res.status(SUCCESS).json(sale);
 });
 
@@ -55,28 +59,25 @@ SalesController.put('/:id', async (req, res) => {
   const { id } = req.params;
   const itensSold = req.body;
   const validatingSale = salesValidator(itensSold);
-
-  if (validatingSale !== 'Sales are valid!') {
-    return res.status(validatingSale.status).json(validatingSale.error);
+  if (validatingSale !== 'All good!') {
+    return res.status(UNPROCESSABLE_ENTITY).json({ 
+      err: {
+        code: 'invalid_data',
+        message: 'Wrong product ID or invalid quantity',
+      },
+    });
+  } else {
+    await updateSale(id, itensSold);
+    return res.status(SUCCESS).json({ _id: id, itensSold });
   }
-  await updateSale(id, itensSold);
-  res.status(SUCCESS).json({ id, itensSold });
 });
 
 SalesController.post('/', stockChecker, async (req, res) => {
   const itensSold = req.body;
-
-  const areTheSalesValid = await salesValidator(itensSold);
-
-  if (areTheSalesValid !== 'Sales are valid!') {
-    return res.status(areTheSalesValid.status).json(areTheSalesValid.error);
-  }
-
+  console.log('chegou aqui')
   const { insertedId } = await createSale(itensSold);
-  const response = { id: insertedId, itensSold };
-  res.status(CREATED).json(response);
+  const response = { _id: insertedId, itensSold };
+  res.status(SUCCESS).json(response);
 });
-
-
 
 module.exports = SalesController;

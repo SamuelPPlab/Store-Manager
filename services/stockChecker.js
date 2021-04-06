@@ -1,7 +1,9 @@
 const { getProductById } = require('../models/productsModel');
+const salesValidator = require('./salesValidator');
 
 const minQuantityLeftInStock = 0;
 const NOT_FOUND = 404;
+const UNPROCESSABLE_ENTITY = 422;
 
 const message = {
   err: {
@@ -10,17 +12,44 @@ const message = {
   },
 };
 
-const findProduct = async (id) => await getProductById(id);
+const needToSellMore = {
+  err: {
+    code: 'invalid_data',
+    message: 'Wrong product ID or invalid quantity',
+  },
+}
+
+const findProduct = async (id) => {
+  return await getProductById(id)
+};
 
 const stockChecker = async (req, res, next) => {
   const itensSold = req.body;
-  itensSold.some(async (sale) => {
-    const { productId } = sale;
-    const product = await findProduct(productId);
-    if (product.quantity - sale.quantity < minQuantityLeftInStock) {
-      return res.status(NOT_FOUND).json(message);
-    }
+  const areSalesValid = salesValidator(itensSold);
+  console.log(areSalesValid)
+  if (typeof areSalesValid !== 'string') {
+    return res.status(areSalesValid.status).json(areSalesValid.error);
+  }
+  const checkingSaleQuantity = itensSold.some((sale) => {
+    return (
+      sale.quantity <= minQuantityLeftInStock 
+    );
   });
+  if (checkingSaleQuantity) {
+    return res.status(UNPROCESSABLE_ENTITY).json(needToSellMore);
+  }
+  const checkingStockAvailability = itensSold.map(async (sale) => {
+    const product = await findProduct(sale.productId);
+    const stockDifference = product.quantity - sale.quantity;
+    return (
+      stockDifference <= minQuantityLeftInStock
+    );
+  });
+  const resolvedPromises = await Promise.all(checkingStockAvailability);
+  const isDataValid = resolvedPromises.some((item) => (item === true));
+  if (isDataValid) {
+    return res.status(NOT_FOUND).json(message);
+  }
   next();
 };
 
