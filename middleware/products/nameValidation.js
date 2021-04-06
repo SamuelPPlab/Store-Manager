@@ -1,4 +1,4 @@
-const productsServices = require('../services/productsServices');
+const productsServices = require('../../services/productsServices');
 
 const UNPROCESSABLE_ENTITY = 422;
 const NUMBER_MIN_LENGTH = 5;

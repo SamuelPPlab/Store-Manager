@@ -1,10 +1,9 @@
 const { Router } = require('express');
 const productsServices = require('../services/productsServices');
-const validateName = require('../middleware/nameValidation');
-const validateQuantity = require('../middleware/quantityValidation');
-const nameExist = require('../middleware/nameExist');
-const validateId = require('../middleware/idValidation');
-// const validateId = require('../middleware/idValidation');
+const validateName = require('../middleware/products/nameValidation');
+const validateQuantity = require('../middleware/products/quantityValidation');
+const nameExist = require('../middleware/products/nameExist');
+const validateId = require('../middleware/products/idValidation');
 
 const router = Router();
 const CREATED = 201;

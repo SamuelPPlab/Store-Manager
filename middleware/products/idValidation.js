@@ -1,5 +1,4 @@
-const { ObjectId } = require('mongodb');
-const productsServices = require('../services/productsServices');
+const productsServices = require('../../services/productsServices');
 
 const UNPROCESSABLE_ENTITY = 422;
 
