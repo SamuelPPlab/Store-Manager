@@ -68,26 +68,28 @@ const validateDeleteId = (req, res, next) => {
 
 const editQuantityAfterSale = async (sale) => {
   const { itensSold } = sale;
-  itensSold.forEach(async(item) => {
+  const arrSold = itensSold.map(async(item) => {
     const { quantity, productId } = item;
     const product = await getProduct(productId);
     const { name, quantity: quantityActual } = product;
     const newQuantity = quantityActual - quantity;
 
-    editProduct({ id: productId, name, quantity: newQuantity });
+    return editProduct({ id: productId, name, quantity: newQuantity });
   });
+  await Promise.all(arrSold);
 };
 
 const editAfterDelete = async (sale) =>{
   const { itensSold } = sale;
-  itensSold.forEach(async (item) => {
+  const arrSold = itensSold.map(async (item) => {
     const { quantity, productId } = item;
     const product = await getProduct(productId);
     const { name, quantity: quantityActual } = product;
     const newQuantity = quantityActual + quantity;
 
-    editProduct({ id: productId, name, quantity: newQuantity });
+    return editProduct({ id: productId, name, quantity: newQuantity });
   });
+  await Promise.all(arrSold);
 };
 
 module.exports = {

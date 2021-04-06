@@ -21,7 +21,8 @@ const Sales = new Router();
 Sales.post('/', validateSaleQuantity, validateProductId, async (req, res) => {
   const sale = await salesProduct(req.body);
   await editQuantityAfterSale(sale);
-  await res.status(SUCCESS).json(sale);
+
+  return res.status(SUCCESS).json(sale);
 });
 
 Sales.get('/', async (_req, res) => {
@@ -45,6 +46,7 @@ Sales.put('/:id', validateSaleId, validateSaleQuantity, async (req, res) => {
   const { id } = req.params;
   await editSales(id, req.body);
   const sale = await getSaleById(id);
+
   return res.status(SUCCESS).json(sale);
 });
 
@@ -55,7 +57,7 @@ Sales.delete('/:id', validateDeleteId, async (req, res) => {
 
   await editAfterDelete(sale);
 
-  await res.status(SUCCESS).json(sale);
+  return res.status(SUCCESS).json(sale);
 });
 
 module.exports = { Sales };
