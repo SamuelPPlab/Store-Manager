@@ -73,10 +73,8 @@ const editQuantityAfterSale = async (sale) => {
     const product = await getProduct(productId);
     const { name, quantity: quantityActual } = product;
     const newQuantity = quantityActual - quantity;
-    if (newQuantity <= MIN_QUANTITY) {
-      return res.status(UNPROCESSABLE).json({ message:'nao tem itens suficientes' });
-    }
-    await editProduct({ id: productId, name, quantity: newQuantity });
+
+    editProduct({ id: productId, name, quantity: newQuantity });
   });
 };
 
@@ -87,7 +85,8 @@ const editAfterDelete = async (sale) =>{
     const product = await getProduct(productId);
     const { name, quantity: quantityActual } = product;
     const newQuantity = quantityActual + quantity;
-    await editProduct({ id: productId, name, quantity: newQuantity });
+
+    editProduct({ id: productId, name, quantity: newQuantity });
   });
 };
 
