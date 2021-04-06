@@ -74,7 +74,6 @@ SalesController.put('/:id', async (req, res) => {
 
 SalesController.post('/', stockChecker, async (req, res) => {
   const itensSold = req.body;
-  console.log('chegou aqui')
   const { insertedId } = await createSale(itensSold);
   const response = { _id: insertedId, itensSold };
   res.status(SUCCESS).json(response);

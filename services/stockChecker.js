@@ -17,16 +17,15 @@ const needToSellMore = {
     code: 'invalid_data',
     message: 'Wrong product ID or invalid quantity',
   },
-}
+};
 
 const findProduct = async (id) => {
-  return await getProductById(id)
+  return await getProductById(id);
 };
 
 const stockChecker = async (req, res, next) => {
   const itensSold = req.body;
   const areSalesValid = salesValidator(itensSold);
-  console.log(areSalesValid)
   if (typeof areSalesValid !== 'string') {
     return res.status(areSalesValid.status).json(areSalesValid.error);
   }
